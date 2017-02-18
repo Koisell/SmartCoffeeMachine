@@ -1,0 +1,461 @@
+/***	Elements génériques, communs et principaux		***/
+
+*
+{
+	margin: 0;
+	padding: 0;
+}
+
+body
+{
+	font-size: 12px;
+	font-family: sans-serif;
+	background: url("img/fond.jpg") no-repeat top fixed; 
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+	background-size: cover;
+}
+
+.nom
+{
+	font-variant: small-caps;
+}
+
+.erreur
+{
+	color: #940000;
+}
+
+td.erreur
+{
+	vertical-align: top;
+	font-size: x-small;
+	color: #940000;
+}
+
+
+/***	Bandeau informatif		***/
+
+#bandeau_information
+{
+	position: fixed;
+		bottom: 0;
+	height: 50px;
+	width: 60%;
+	background-color: #C1DDED;
+	box-shadow: 0px 0px 30px #B8CED2;
+	border-radius: 5px;
+	margin: 30px 20%;
+	text-align: center;
+	border: 1px solid #A2C7DB;
+}
+
+#bandeau_information img
+{
+	z-index: 30;
+	position: relative;
+		bottom: 15px;
+		left: 20px;
+	float: left;
+}
+
+#bandeau_information span
+{
+	position: relative;
+		top: 15px;
+	font-size: large;
+	color: #316F8C;
+}
+
+
+/***	Page		***/
+
+#page
+{
+	width: 700px;
+	margin: 0 auto;
+	margin-top: 60px;
+	font-family: sans-serif;
+	background: url("img/courbes.png") no-repeat top;
+	background-position: 80px 0px; 
+}
+
+#page .titre
+{
+	font-variant: small-caps;
+	font-weight: bold;
+	font-size: 4em;
+	font-family: Arial;
+	position: relative;
+		left: 110px;
+		top: -7px;
+}
+
+#page a
+{
+	text-decoration: none;
+	color: #835328;
+}
+
+#page .sous-titre
+{
+	font-family: Serif;
+	color: #A17C55;
+	letter-spacing: 2px;
+	display: block;
+	margin-bottom: 5px;
+	position: relative;
+		left: 140px;
+		top: -5px;
+}
+
+
+
+/*** 	Cadre principal		***/
+
+#cadre_principal
+{
+	background-color: rgba(255,255,255,0.8);
+	border-radius: 7px 7px 7px 7px;
+	padding: 15px 15px 20px 0px;
+}
+
+#cadre_principal+p
+{
+	color: gray;
+	font-size: x-small;
+	text-align: right;
+	margin: 4px 20px 40px 0px;
+}
+
+#cadre_principal > .clear
+{
+	clear: both;
+	height: 0;
+	overflow: hidden;
+}
+
+
+/*** 	Menu		***/
+
+#menu
+{
+	width: 170px;
+	float: left;
+	font-size: 13px;
+	position: relative;
+		left: -25px;
+}
+
+#menu ul
+{
+	list-style: none;
+}
+
+#menu li 
+{
+	background-repeat: no-repeat;
+	background-position: left;
+	background-position: 0px 0px;
+	height: 20px;
+	margin-top: 15px;
+	
+}
+
+#menu li:hover
+{
+	background-position: 0 -20px;
+}
+
+#menu li.accueil
+{
+	background-image: url("img/icones/icone_accueil.png");
+}
+
+#menu li.connexion
+{
+	background-image: url("img/icones/icone_cadenas.png");
+}
+
+#menu li.compte
+{
+	background-image: url("img/icones/icone_utilisateur.png");
+}
+
+#menu li.preparer
+{
+	background-image: url("img/icones/icone_boisson.png");
+}
+
+#menu li.apropos
+{
+	background-image: url("img/icones/icone_info.png");
+}
+
+#menu li a
+{
+	margin-left: 25px;
+	padding-left: 20px;
+	color: #724F29;
+	font-weight: normal;
+	text-decoration: none;
+}
+
+#menu li a:hover
+{
+	color: #402811;
+	font-weight: normal;
+	text-decoration: none;
+}
+
+#menu li a.selection
+{
+	color: #402811;
+	background-repeat: no-repeat;
+	background-position: left;
+	background-position: 0px 0px;
+	background-image: url("img/fleche.png");
+}
+
+
+/*** 	Contenu 	***/
+
+#contenu
+{
+	float: right;
+	width: 515px;
+}
+
+#contenu h1
+{
+	font-size: 14px;
+	color: #6A4320;
+	background-image: url(img/graine_h1.png); 
+	background-repeat: no-repeat;
+	background-position: left;
+	width: 100%;
+	margin-top: 20px;
+	margin-bottom: 5px;
+	padding-left: 30px;
+}
+
+#contenu p
+{
+	text-indent: 30px;
+	font-size: small;
+	color: #444;
+	font-size: 10px;
+	text-align: justify;
+	margin: 5px 0px 5px 0px;
+}
+
+#contenu p.message_confirmation
+{
+	color: #448344;
+	font-weight: bold;
+	display: none;
+}
+
+#contenu p.message_confirmation:before
+{
+	content: "→ ";
+	margin-right: 5px;
+}
+
+#contenu p span
+{
+	font-size: 13px;
+	color: #444;
+}
+
+#contenu p.info_connexion_haut_page
+{
+	color: #64848B;
+	text-indent: 0px;
+	font-size: x-small;
+	margin-bottom: 10px;
+}
+
+#contenu p.intro
+{
+	color: #666;
+	margin: 0;
+}
+
+#contenu a
+{
+	font-weight: bold;
+	color: #1F5F6D;
+	text-decoration: none;
+}
+
+#contenu a:hover
+{
+	font-weight: bold;
+	color: #1F5F6D;
+	text-decoration: underline;
+}
+
+#contenu a.lien_important
+{
+	display: block;
+	background-color: #C99E67;
+	border-radius: 4px 4px 4px 4px;
+	color: #fff;
+	width: 200px;
+	padding-top: 5px;
+	height: 20px;
+	margin: 10px auto;
+}
+
+#contenu a.lien_important:hover
+{
+	background-color: #8C5931;
+}
+
+#contenu h2
+{
+	border-bottom: 1px dashed #fff;
+	margin: 25px 0px 10px 20px;
+}
+
+#contenu hr
+{
+	margin: 10px 0px 10px 0px;
+	height: 1px;
+	border: 0;
+	background-color: #ddd;
+}
+
+#contenu #parametres_prochaine_consommation
+{
+	width: 100%;
+}
+
+#informations_souhait,#selection_automatique
+{
+	width: 41%;
+	height: 120px;
+	float: left;
+	margin: 2%;
+	padding: 2%;
+	background-color: #fff;
+	border: 1px solid #D7BDA1;
+	border-radius: 5px 5px 5px 5px;
+}
+
+#contenu #parametres_prochaine_consommation #selection_automatique img
+{
+	display: block;
+	width: auto;
+	margin: 0 auto;
+	margin-top: 15px;
+}
+
+#contenu #parametres_prochaine_consommation #informations_souhait ul
+{
+	list-style-type: none;
+}
+
+#contenu #parametres_prochaine_consommation #informations_souhait li
+{
+	margin: 5px 0px 0px 5px;
+	font-size: 11px;
+}
+
+#contenu #parametres_prochaine_consommation #informations_souhait select
+{
+	font-size: 11px;
+	position: relative;
+		top: 1px;
+}
+
+#contenu #parametres_prochaine_consommation label.choix_principal
+{
+	color: #563110;
+	font-weight: bold;
+	font-size: 11px;
+}
+
+#contenu #parametres_prochaine_consommation .non_selectionne
+{
+	background-color: #F9F9F9;
+	color: gray;
+	border: 1px dotted #bbb;
+}
+
+#contenu #parametres_prochaine_consommation .non_selectionne label.choix_principal
+{
+	color: #bbb;
+}
+
+#contenu table
+{
+	margin: 0 auto;
+	border-collapse: collapse;
+}
+
+#contenu table th
+{
+	font-weight: normal;
+}
+
+#contenu table tr
+{
+	height: 30px;
+}
+
+#contenu table.formulaire_connexion
+{
+	margin-top: 15px;
+}
+
+#contenu table.formulaire_connexion label
+{
+	padding-right: 5px;
+}
+
+#contenu table.formulaire_connexion th
+{
+	border: none;
+	color: #47290E;
+	text-align: right;
+}
+
+#contenu table input[type="submit"]
+{
+	width: 70%;
+	margin-left: 15%;
+}
+
+#contenu table.liste_consommations
+{
+	width: 100%;
+	text-align: center;
+	color: #333;
+}
+	
+#contenu table.liste_consommations tr
+{
+	height: 25px;
+	border: 1px solid #ddd;
+}
+	
+#contenu table.liste_consommations th
+{
+	border: none;
+	font-weight: bold;
+	color: #6E6742;
+}
+	
+#contenu table.liste_consommations tr.entete
+{
+	border: none;
+	height: 30px;
+}
+	
+#contenu table tr.fond_impair
+{
+	background-color: #F7F3DB;
+}

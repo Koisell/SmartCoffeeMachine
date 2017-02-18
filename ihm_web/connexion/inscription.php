@@ -228,7 +228,7 @@ function inclureMessageErreurSiExistant($nom_variable_post)
 function enregistrerInformations()
 {
 	// Les informations sont mises à jour dans la BDD
-	return mysql_requete("UPDATE utilisateurs SET 
+	return bdd_query($db, "UPDATE utilisateurs SET 
 						prenom='" . filtreSecurite(miseEnFormeCourteChaine($_POST['prenom_cafe'])) . "',
 						nom='" . filtreSecurite(miseEnFormeCourteChaine($_POST['nom_cafe'])) . "',
 						email='" . filtreSecurite(enMinuscules($_POST['login_cafe'])) . "',
@@ -253,7 +253,7 @@ function emailExisteDeja($email, $simple_mise_a_jour)
 	else
 		$restriction = "";
 		
-	$requete = mysql_requete("SELECT COUNT(*) AS nb_emails 
+	$requete = bdd_query($db, "SELECT COUNT(*) AS nb_emails 
 								FROM utilisateurs 
 								WHERE email='" . enMinuscules($email) . "'" . $restriction);
 	$donnees = bdd_fetch_array($requete);
@@ -265,7 +265,7 @@ function emailExisteDeja($email, $simple_mise_a_jour)
 function clefExisteEtEstLibre($clef)
 {
 	// On cherche à savoir si cette clef représente une entrée dans la base et si cette entrée n'a pas déja fait l'objet d'une inscription
-	$requete = mysql_requete("SELECT COUNT(*) AS nb_clefs 
+	$requete = bdd_query($db, "SELECT COUNT(*) AS nb_clefs 
 								FROM utilisateurs 
 								WHERE uid='" . enMinuscules($clef) . "' AND prenom=''");
 	$donnees = bdd_fetch_array($requete);

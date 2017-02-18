@@ -9,7 +9,7 @@ if(isset($_GET['id']) && is_numeric($_GET['id']) &&
 	isset($_GET['longueur']) && is_numeric($_GET['longueur']) && 
 	isset($_GET['sucre']) && is_numeric($_GET['sucre']))
 {
-	$resultat = mysql_requete("UPDATE utilisateurs 
+	$resultat = bdd_query($db, "UPDATE utilisateurs 
 								SET proposition_automatique='" . $_GET['mode'] . "',
 								souhait_intensite='" . $_GET['intensite'] . "',
 								souhait_longueur='" . $_GET['longueur'] . "',

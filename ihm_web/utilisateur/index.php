@@ -111,7 +111,7 @@ else
 			
 			// Par défaut, on sélectionne l'un des deux cadres en fonctions du précédent choix de l'utilisateur
 			<?php
-			if(mysql_num_rows($requete_consommations) == 0) // Si aucune consommation n'a été enregistrée auparavant
+			if(bdd_num_rows($requete_consommations) == 0) // Si aucune consommation n'a été enregistrée auparavant
 			{
 				?>
 				selectionnerModePerso(false);
@@ -154,7 +154,7 @@ else
 	<div id="parametres_prochaine_consommation">
 		<div id="selection_automatique">
 			<center>
-				<input type="radio" class="decision" name="base_selection" id="auto" value="1" <?php if(mysql_num_rows($requete_consommations) == 0) echo "disabled=\"disabled\""; ?>><br />
+				<input type="radio" class="decision" name="base_selection" id="auto" value="1" <?php if(bdd_num_rows($requete_consommations) == 0) echo "disabled=\"disabled\""; ?>><br />
 				<label for="auto" class="choix_principal">Selon mes habitudes</label>
 			</center>
 			
@@ -186,7 +186,7 @@ else
 	<h1>Liste de vos récentes consommations</h1>
 	
 	<?php
-	if(mysql_num_rows($requete_consommations) == 0)
+	if(bdd_num_rows($requete_consommations) == 0)
 		echo "<p>Vous n'avez encore jamais utilisé la machine à café !</p>";
 	
 	else

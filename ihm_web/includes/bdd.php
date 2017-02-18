@@ -15,11 +15,16 @@ function bdd_close($db){
 }
 
 function bdd_fetch_array($result_set){
-    return $result_set->fetchArray()
+    return $result_set->fetchArray();
 }
 
-$path2DB = "/home/pi/Documents/SQLite/cafe.db";
+function bdd_num_rows($result_set)
+{
+    return count(bdd_fetch_array($result_set));
+}
+
+$path2DB = "/home/pi/Documents/SQLite/cafe.bd";
 
 // Par défaut, on se connecte sur la base principale
-$db = connexionBase($path2DB);
+$GLOBALS['db'] = connexionBase($path2DB);
 ?>

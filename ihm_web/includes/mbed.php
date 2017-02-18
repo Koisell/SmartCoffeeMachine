@@ -27,7 +27,7 @@ function enregistrerDistance($dist)
 
 function demanderUnCafe($parametre_longueur, $parametre_intensite)
 {
-	$requete = mysql_query("UPDATE parametres 
+	$requete = bdd_query($db, "UPDATE parametres 
 							SET demande_cafe=1, 
 								demande_cafe_longueur=" . $parametre_longueur . ", 
 								demande_cafe_intensite=" . $parametre_intensite);

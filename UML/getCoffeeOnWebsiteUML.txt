@@ -1,0 +1,19 @@
+@startuml
+
+actor User
+
+alt user is not connected
+User -> Website: connect()
+end
+
+database MyDB
+Website -> MyDB: getUserFavoriteCoffee()
+MyDB --> Website
+
+alt user want a other coffee than is favorite one
+User -> Website: changeSettings
+end
+
+Website -> waitingCoffee: makeCoffee(*param)
+Website -> MyDB: saveConsumption(*param)
+@enduml

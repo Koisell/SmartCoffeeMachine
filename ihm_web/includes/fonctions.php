@@ -11,7 +11,7 @@ if(!isset($temoin_inclusion_fonctions))
 	include("dates.php");
 	include("cafe.php");
 	include("manipulations_variables.php");
-	include("mbed.php");
+	//include("mbed.php");
 	include("mails.php");
 
 	$temoin_inclusion_fonctions = true;

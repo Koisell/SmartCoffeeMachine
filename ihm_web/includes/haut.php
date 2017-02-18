@@ -16,10 +16,10 @@ else
 		<title><?php echo $titre_fenetre . "Machine à café intelligente de l'INSA de Rouen"; ?></title>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="author" content="Laurent Georges, Léo Lefebvre, Anthonin Lizé et Simon Rohou" />
-		<link rel="stylesheet" media="screen" type="text/css" title="style" href="<?php echo accesRacine(); ?>design/style.css" />
+		<link rel="stylesheet" media="screen" type="text/css" title="style" href="<?php echo accesRacine(); ?>/design/style.css" />
 		<script src="<?php echo accesRacine(); ?>/includes/javascript/jquery.min.js"></script>
 		
-		<script>
+<!-- 		<script>
 			function actualiser()
 			{
 				$('#actualisation_bandeau').load('<?php echo accesRacine(); ?>mbed/afficher_information_eau.php');
@@ -27,7 +27,7 @@ else
 			
 			var refreshId = setInterval(actualiser, 500);
 		</script>
-
+ -->
 	</head>
 	
 	<body>
@@ -89,10 +89,10 @@ else
 						?>
 					
 						<li class="accueil"><a <?php echo $selection_accueil . accesRacine(); ?>">Accueil</a></li>
-						<li class="connexion"><a <?php echo $selection_connexion . accesRacine(); ?>connexion"><?php echo $prefixe_connexion; ?>onnexion</a></li>
-						<li class="compte"><a <?php echo $selection_compte . accesRacine(); ?>utilisateur">Votre compte</a></li>
-						<li class="preparer"><a <?php echo $selection_preparation_distance . accesRacine(); ?>commande_distance">Préparer un café</a></li>
-						<li class="apropos"><a <?php echo $selection_a_propos . accesRacine(); ?>a_propos">À propos</a></li>
+						<li class="connexion"><a <?php echo $selection_connexion . accesRacine(); ?>/connexion"><?php echo $prefixe_connexion; ?>onnexion</a></li>
+						<li class="compte"><a <?php echo $selection_compte . accesRacine(); ?>/utilisateur">Votre compte</a></li>
+						<li class="preparer"><a <?php echo $selection_preparation_distance . accesRacine(); ?>/commande_distance">Préparer un café</a></li>
+						<li class="apropos"><a <?php echo $selection_a_propos . accesRacine(); ?>/a_propos">À propos</a></li>
 					</ul>
 				</div>
 				

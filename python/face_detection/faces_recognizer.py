@@ -47,11 +47,17 @@ class Recognizer():
     def get_dataset_sqlite(self):
         raise NotImplementedError()
 
+    def set_recognizer_xml(self, xmlfile):
+        self.recognizer.load(xmlfile)
+
     def train(self, pictures, labels):
-        return self.recognizer.train(pictures, np.array(labels))
+        self.recognizer.train(pictures, np.array(labels))
 
     def predict(self, frame):
         return self.recognizer.predict(frame)
+
+    def save_recognizer(self, filename):
+        self.recognizer.save(filename)
 
 
 def main():
@@ -60,6 +66,7 @@ def main():
 
     video_capture = VideoCapture(0)
     face_detector = FaceDetector(cascPath, min_face_dim=(100, 100))
+    recognizer.save_recognizer("faces.xml")
 
     while True:
         # Capture frame-by-frame
@@ -74,7 +81,7 @@ def main():
             rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
             nbr_predicted = recognizer.predict(gray[y: y + h, x: x + w])
             if nbr_predicted is not None:
-                print("{} is Correctly Recognized with confidence".format(nbr_predicted))
+                print("{} is Correctly Recognized".format(nbr_predicted))
 
         # Display the resulting frame
         imshow('Video', frame)

@@ -3,6 +3,9 @@
 
 import cv2
 import sys
+from picamera.array import PiRGBArray
+from picamera import PiCamera
+from time import sleep
 
 
 class FaceDetector():
@@ -31,16 +34,23 @@ def main():
     if len(sys.argv) > 1:
         cascPath = sys.argv[1]
     else:
-        cascPath = "/usr/share/OpenCV/haarcascades/haarcascade_frontalface_default.xml"  # Path on fedora 25
+        cascPath = "/home/pi/opencv-3.2.0/data/haarcascades/haarcascade_frontalface_default.xml"  # Path on pi
 
     faceCascade = cv2.CascadeClassifier(cascPath)
 
     video_capture = cv2.VideoCapture(0)
+    video_capture = PiCamera()
+    video_capture.resolution = (640, 480)
+    video_capture.framerate = 32
+    rawCapture = PiRGBArray(video_capture, size=(640, 480))
     min_face_dim = (50, 50)
 
-    while True:
+    # allow the camera to warmup
+    sleep(0.1)
+
+    for frame in video_capture.capture_continuous(rawCapture, format="bgr", use_video_port=True):
         # Capture frame-by-frame
-        ret, frame = video_capture.read()
+        frame = frame.array
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
@@ -57,12 +67,11 @@ def main():
 
         # Display the resulting frame
         cv2.imshow('Video', frame)
-
+        rawCapture.truncate(0)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
     # When everything is done, release the capture
-    video_capture.release()
     cv2.destroyAllWindows()
 
 

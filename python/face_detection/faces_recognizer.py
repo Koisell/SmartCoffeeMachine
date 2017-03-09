@@ -8,7 +8,7 @@ import sys
 import numpy as np
 from PIL import Image
 from csv import reader as csvreader
-from detect_face_pc import FaceDetector
+from detect_face import FaceDetector
 
 
 cascPath = "/usr/share/OpenCV/haarcascades/haarcascade_frontalface_default.xml"  # Path on fedora 25

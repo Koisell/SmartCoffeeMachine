@@ -29,15 +29,6 @@ class FaceDetector():
         self.face_cascade = cv2.CascadeClassifier(self.cascPath)
 
 
-class CameraRPi(PiCamera):
-    def __init__(self, resolution, framerate):
-        self.resolution = resolution  # tuple
-        self.framerate = framerate
-
-    def take_capture(self):
-        return PiRGBArray(self, size=self.resolution)
-
-
 def main():
     print(len(sys.argv))
     if len(sys.argv) > 1:
@@ -45,10 +36,10 @@ def main():
     else:
         cascPath = "/home/pi/opencv-3.2.0/data/haarcascades/haarcascade_frontalface_default.xml"  # Path on pi
 
-    resolution = (640, 480)
-    framerate = 32
-    video_capture = CameraRPi(resolution, framerate)
-    rawCapture = video_capture.take_capture
+    video_capture = PiCamera()
+    video_capture.resolution = (640, 480)
+    video_capture.framerate = 24
+    rawCapture = PiRGBArray(video_capture, size=(640, 480))
 
     face_cascade = FaceDetector(cascPath)
     # allow the camera to warmup

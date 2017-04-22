@@ -118,7 +118,7 @@ class CoffeeMachine():
         f = partial(self.rotate_volume_button, "r")
         return CoffeeMachine.get_position(f, self.volume_captor, 6)
 
-    def get_position_intensite(self):
+    def get_position_intensity(self):
         f = partial(self.push_button, self.pin_intensity)
         return CoffeeMachine.get_position(f, self.intensity_captor, 5)
 

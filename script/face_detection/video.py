@@ -1,4 +1,5 @@
-# import the necessary packages
+#!/usr/bin/env python3
+# coding: utf-8
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 import time

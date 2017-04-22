@@ -28,7 +28,7 @@ class Recognizer():
         self.recognizer = create_function()
 
     def get_dataset_csv(self, csv_to_path, casc_path):
-        face_detector = FaceDetector(casc_path, min_face_dim=(100, 100))
+        face_detector = FaceDetector(casc_path, min_face_dim=(200, 200))
         pictures = []
         labels = []
         with open(csv_to_path, 'r') as csvfile:

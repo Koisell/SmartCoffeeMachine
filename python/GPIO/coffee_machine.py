@@ -10,6 +10,7 @@ from functools import partial
 class CoffeeMachine():
     standart_time = 0.1
 
+    # we should make a conf file to setup pin...
     def __init__(self):
         GPIO.setmode(GPIO.BCM)
 
@@ -29,6 +30,9 @@ class CoffeeMachine():
         self.pin_sonar1 = 13
         self.pin_sonar2 = 14
         self.captor_pin_list = [self.pin_intensity_captor, self.pin_volume_captor, self.pin_water]
+
+        self.old_is_cup = self.is_cup()
+        self.new_is_cup = self.is_cup()
 
         GPIO.setup(self.actuator_pin_list, GPIO.OUT, initial=GPIO.LOW)
         GPIO.setup(self.captor_pin_list, GPIO.IN)
@@ -50,14 +54,14 @@ class CoffeeMachine():
         GPIO.output(pin, GPIO.LOW)
 
     def make_coffee(self, volume, intensity):
-        self.set_volume(volume)
-        self.set_intensity(intensity)
-
         # Waiting to refull water tank
-        while not self.tank_is_full():
+        while not self.is_ready():
             pass
 
+        self.set_volume(volume)
+        self.set_intensity(intensity)
         CoffeeMachine.push_button(self.pin_single_coffee_button, self.standart_time)
+        return True
 
     # f selection is the fonction to change leds position
     @staticmethod
@@ -117,6 +121,18 @@ class CoffeeMachine():
     def get_position_intensite(self):
         f = partial(self.push_button, self.pin_intensity)
         return CoffeeMachine.get_position(f, self.intensity_captor, 5)
+
+    def is_cup(self):
+        raise NotImplementedError()
+
+    def is_new_cup(self):
+        return (not self.old_is_cup) and self.new_is_cup
+
+    def tank_is_full(self):
+        return CoffeeMachine.detection(self.pin_water)
+
+    def is_ready(self):
+        return self.tank_is_full()
 
     # You should ALWAYS only use one and only one Instance of this class
     def clear_pin(self):

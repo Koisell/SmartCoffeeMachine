@@ -4,7 +4,7 @@
 
 import sys
 import os.path
-
+from re import match
 # This is a tiny script to help you creating a CSV file from a face
 # database with a similar hierarchie:
 #
@@ -39,7 +39,10 @@ if __name__ == "__main__":
     for dirname, dirnames, filenames in os.walk(BASE_PATH):
         for subdirname in dirnames:
             subject_path = os.path.join(dirname, subdirname)
+            number = match("s(\d+).*", subdirname)
+            label = int(number.group(1))
             for filename in os.listdir(subject_path):
-                abs_path = "%s/%s" % (os.path.abspath(subject_path), filename)
-                print("%s%s%d" % (abs_path, SEPARATOR, label))
+                if match(".*\.(?:png|jpg|pgm|jpeg)", filename.lower()) is not None:
+                    abs_path = "%s/%s" % (os.path.abspath(subject_path), filename)
+                    print("%s%s%d" % (abs_path, SEPARATOR, label))
             label += 1

@@ -72,8 +72,8 @@ class Recognizer():
 
 def main():
     recognizer = Recognizer(createLBPHFaceRecognizer)
-    recognizer.train(*recognizer.get_dataset_csv("faces_dataset.csv", cascPath))
-
+    #recognizer.train(*recognizer.get_dataset_csv("faces_dataset.csv", cascPath))
+    recognizer.set_recognizer_xml("faces.xml")
     video_capture = VideoCapture(0)
     face_detector = FaceDetector(cascPath, min_face_dim=(100, 100))
     recognizer.save_recognizer("faces.xml")
@@ -91,7 +91,7 @@ def main():
             rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
             nbr_predicted = recognizer.predict(gray[y: y + h, x: x + w])
             if nbr_predicted is not None:
-                print("{} is Correctly Recognized".format(nbr_predicted))
+                print("{} is Correctly Recognized with {} % good recognition.".format(*nbr_predicted))
 
         # Display the resulting frame
         imshow('Video', frame)

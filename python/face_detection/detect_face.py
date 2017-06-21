@@ -14,8 +14,9 @@ class FaceDetector():
         self.face_cascade = cv2.CascadeClassifier(self.casc_path)
 
     def detect(self, frame):
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         return self.face_cascade.detectMultiScale(
-            frame,
+            gray,
             scaleFactor=self.scale_factor,
             minNeighbors=self.min_neighbors,
             minSize=self.min_face_dim

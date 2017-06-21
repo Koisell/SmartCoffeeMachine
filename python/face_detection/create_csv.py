@@ -39,10 +39,11 @@ if __name__ == "__main__":
     for dirname, dirnames, filenames in os.walk(BASE_PATH):
         for subdirname in dirnames:
             subject_path = os.path.join(dirname, subdirname)
-            number = match("s(\d+).*", subdirname)
-            label = int(number.group(1))
-            for filename in os.listdir(subject_path):
-                if match(".*\.(?:png|jpg|pgm|jpeg)", filename.lower()) is not None:
-                    abs_path = "%s/%s" % (os.path.abspath(subject_path), filename)
-                    print("%s%s%d" % (abs_path, SEPARATOR, label))
-            label += 1
+            number = match("s(-?\d+).*", subdirname)
+            if number:
+                label = int(number.group(1))
+                for filename in os.listdir(subject_path):
+                    if match(".*\.(?:png|jpg|pgm|jpeg)", filename.lower()) is not None:
+                        abs_path = "%s/%s" % (os.path.abspath(subject_path), filename)
+                        print("%s%s%d" % (abs_path, SEPARATOR, label))
+                label += 1

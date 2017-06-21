@@ -27,8 +27,8 @@ class Recognizer():
     def __init__(self, create_function):
         self.recognizer = create_function()
 
-    def get_dataset_csv(self, csv_to_path, casc_path):
-        face_detector = FaceDetector(casc_path, min_face_dim=(200, 200))
+    def get_dataset_csv(self, csv_to_path, casc_path, min_face_dim=(200, 200)):
+        face_detector = FaceDetector(casc_path, min_face_dim=min_face_dim)
         pictures = []
         labels = []
         with open(csv_to_path, 'r') as csvfile:
@@ -44,7 +44,7 @@ class Recognizer():
                             waitKey(50)
                     labels.append(int(row[1]))
                 else:
-                    raise ParserExecption()
+                    raise ParserExecption("Your csv seems to be uncorrect.")
         destroyAllWindows()
         return pictures, labels
 
@@ -72,7 +72,7 @@ class Recognizer():
 
 def main():
     recognizer = Recognizer(createLBPHFaceRecognizer)
-    #recognizer.train(*recognizer.get_dataset_csv("faces_dataset.csv", cascPath))
+    # recognizer.train(*recognizer.get_dataset_csv("faces_dataset.csv", cascPath))
     recognizer.set_recognizer_xml("faces.xml")
     video_capture = VideoCapture(0)
     face_detector = FaceDetector(cascPath, min_face_dim=(100, 100))

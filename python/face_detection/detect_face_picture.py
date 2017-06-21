@@ -19,7 +19,8 @@ def main():
     detector = FaceDetector(casc_path, min_face_dim=(100, 100))
 
     img = cv2.imread(picture)
-    detections = detector.detect(img)
+    gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+    detections = detector.detect(gray)
 
     for (x, y, w, h) in detections:
         cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)

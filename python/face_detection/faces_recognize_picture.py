@@ -44,7 +44,7 @@ def main():
         cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
         nbr_predicted = recognizer.predict(gray[y: y + h, x: x + w])
         if nbr_predicted is not None:
-            cv2.putText(img, "Cat #{}".format(nbr_predicted[0]), (x, y - 10),
+            cv2.putText(img, "Subject #{}".format(nbr_predicted[0]), (x, y - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 255), 2)
     # Display the resulting frame
     cv2.imshow('Picture', img)

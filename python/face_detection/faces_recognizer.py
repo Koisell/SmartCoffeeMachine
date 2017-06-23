@@ -2,8 +2,8 @@
 # coding: utf-8
 
 from cv2.face import createLBPHFaceRecognizer
-from cv2 import imshow, waitKey, destroyAllWindows, VideoCapture, cvtColor, rectangle
-from cv2 import COLOR_BGR2GRAY
+from cv2 import imshow, waitKey, destroyAllWindows, VideoCapture, cvtColor, rectangle, imread
+from cv2 import COLOR_RGB2GRAY
 import sys
 import numpy as np
 from PIL import Image
@@ -35,13 +35,13 @@ class Recognizer():
             dataset = csvreader(csvfile, delimiter="|")
             for row in dataset:
                 if len(row) == 2:
-                    with Image.open(row[0]) as image:
-                        image = np.array(image.convert('L'), 'uint8')
-                        face = face_detector.detect(image)
-                        for x, y, w, h in face:
-                            pictures.append(image[y: y + h, x: x + w])
-                            imshow("Adding faces to traning set...", image[y: y + h, x: x + w])
-                            waitKey(50)
+                    image = imread(row[0])
+                    image = cvtColor(image, COLOR_RGB2GRAY)
+                    face = face_detector.detect(image)
+                    for x, y, w, h in face:
+                        pictures.append(image[y: y + h, x: x + w])
+                        imshow("Adding faces to traning set...", image[y: y + h, x: x + w])
+                        waitKey(50)
                     labels.append(int(row[1]))
                 else:
                     raise ParserExecption("Your csv seems to be uncorrect.")
@@ -82,7 +82,7 @@ def main():
         # Capture frame-by-frame
         ret, frame = video_capture.read()
 
-        gray = cvtColor(frame, COLOR_BGR2GRAY)
+        gray = cvtColor(frame, COLOR_RGB2GRAY)
 
         faces = face_detector.detect(gray)
 

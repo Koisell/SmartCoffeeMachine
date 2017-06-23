@@ -41,7 +41,7 @@ def main():
         # Capture frame-by-frame
         ret, frame = video_capture.read()
 
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
 
         faces = faceCascade.detectMultiScale(
             gray,

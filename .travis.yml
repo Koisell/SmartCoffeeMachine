@@ -1,0 +1,25 @@
+dist: trusty
+sudo: required
+language: python
+
+addons:
+  sonarqube:
+    organization: "koisell-github" # the key of the org you chose at step #3
+    token:
+      secure: "dHE83fmpvW4kiEflVUh16AwCjpNEOsBhP2IPOD7KlaytZj18SysOWyzaz4ZgPovKhVe4BkGVQLrIFGk3L6ge6zR9vCIBVo9e1/52/0q5aat5/sB7P7cROSkVuT/qhLjugr13HCK4uxdA9Zszc3rHB04N3s0ijjoWuSUyZg8i5oS5Iz3O/qh0QHsDypM8h0I6rdqygwmwgOwSWbxBWICfYoMIQMt7i4C9KhR2TVwRq+LNKCfME4VcnrJfxZOpoHyBhMj6CQl5wc8iCMOmwTrdFiYSLp+bVUo0WyLx5Udz7EMLpJI+dq2US4YikR/4RN8e0g2G0IVEHvykm8dVXtlULNHM+wipBOMu8ZCMRnZcBQr3kp2e5XU6gdWbliz6yw2B1r4Sjkc1qt+g31+dpWlJIzzZUVPQ9P6C4oQbpaRleObJ0Pj6nX49GnGHCF2JwZyXnuPXqqrpQgCSPKqkToqaqptL1/fFLy6TlkdHTq7Ec2jqWxuerTKgD//tdj2Rb/0F4ceBS0wtQZyIJyHD+4p77aI/gU8Yru6ljx3vh5jyddJJ1P0TtkxNELWpbXUR0vpH4QamBVrokpuYh/nQYOZSljDnZGybyCChIZJ6yAss0cOTLZwYgPLf4+OFWOzPPTRBmGDLYqFgHUVF24CltegYdvZFAkhiyxXiFHuNWbNLneU="
+
+python:
+  - "3.5"
+  - "3.6"
+
+# command to install dependencies
+install: 
+  - "pip3 install -r requirements.txt"
+
+script:
+  - sonar-scanner
+# command to run tests
+# script: pytest
+
+notifications:
+  email: false

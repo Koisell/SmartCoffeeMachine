@@ -65,7 +65,7 @@ class ThreadedServer():
                         response = "OK"
                     elif msg == "N":
                         while not self.waiter.coffee_machine.is_new_cup():
-                            pass
+                            sleep(1)
                         volume = self.waiter.coffee_machine.get_position_volume()
                         intensity = self.waiter.coffee_machine.get_position_intensity()
                         response = "{},{}".format(volume, intensity)

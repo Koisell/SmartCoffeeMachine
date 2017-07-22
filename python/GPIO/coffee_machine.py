@@ -56,7 +56,7 @@ class CoffeeMachine():
     def make_coffee(self, volume, intensity):
         # Waiting to refull water tank
         while not self.is_ready():
-            pass
+            sleep(1)
 
         self.set_volume(volume)
         self.set_intensity(intensity)
@@ -142,5 +142,5 @@ class CoffeeMachine():
     def __del__(self):
         self.__clear_pin()
 
-    def __exit__(self):
+    def __exit__(self, type, value, traceback):
         self.__clear_pin()

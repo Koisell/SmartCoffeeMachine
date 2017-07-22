@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Koisell/SmartCoffeeMachine.svg?branch=master)](https://travis-ci.org/Koisell/SmartCoffeeMachine)
+[![Travis](https://travis-ci.org/Koisell/SmartCoffeeMachine.svg?branch=master&style=flat-square)](https://travis-ci.org/Koisell/SmartCoffeeMachine) [![Sonarqube]https://sonarcloud.io/api/badges/gate?key=SmartCoffeeMachine](https://sonarcloud.io/api/badges/gate?key=SmartCoffeeMachine)
 # SmartCoffeeMachine
 
 The Smart Coffee Machine is a student project at INSA Rouen.

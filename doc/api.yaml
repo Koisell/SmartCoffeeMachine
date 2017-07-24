@@ -1,0 +1,128 @@
+# CoffeeMachine API
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: "1.0.0"
+  title: SmartCoffeeMachine
+
+# Describe your paths here
+paths:
+  # This is a path endpoint. Change it.
+  /users/{id}:
+    get:
+      # Describe this verb here. Note: you can use markdown
+      description: Gets `User` object by is ID.
+      parameters:
+        - in: path
+          name: id
+          description: User ID.
+          required: true
+          type: integer
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: Invalid id provided
+        404:
+          description: User not found
+    delete:
+      description: Remove `User`
+      parameters:
+        - in: path
+          name: id
+          description: User ID.
+          required: true
+          type: integer
+      responses:
+        200:
+          description: User succesfuly destroyed
+        400:
+          description: Invalid ID
+        404:
+          description: User not found.
+    put:
+      description: Modifies `User`
+      parameters:
+        - in: path
+          name: id
+          description: User ID.
+          required: true
+          type: integer
+        - in: body
+          name: modifiedUser
+          description: New parameters.
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                description: The user name.
+              intensity:
+                type: integer
+                description: Favorite coffee intensity of the user
+              volume:
+                type: integer
+                description: Favorite coffee volume of the user  
+      responses:
+        204:
+          description: User succesfully modified
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: Invalid ID
+        404:
+          description: User not found.
+            
+  /users/:
+    post:
+      description: Creates `User` object.
+      parameters:
+        - in: body
+          name: user
+          description: New user.
+          required: true
+          schema:
+            $ref: "#/definitions/newUser"
+      responses:
+        201:
+          description: User succesfully created
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: Incorrect body
+  
+                  
+definitions:
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: The user ID.
+      username:
+        type: string
+        description: The user name.
+      intensity:
+        type: integer
+        description: Favorite coffee intensity of the user
+      volume:
+        type: integer
+        description: Favorite coffee volume of the user
+  
+  newUser:
+    type: object
+    properties:
+      username:
+        type: string
+        description: The user name.
+      intensity:
+        type: integer
+        description: Favorite coffee intensity of the user
+      volume:
+        type: integer
+        description: Favorite coffee volume of the user

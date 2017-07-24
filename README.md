@@ -9,7 +9,7 @@ This project has begun in 2013 and was initialy powerered by Mbed and a LAMP ser
 
 Go check the video on youtube:
 
-<center>[![IMAGE ALT TEXT](http://img.youtube.com/vi/iuIVYywHhKs/0.jpg)](http://www.youtube.com/watch?v=iuIVYywHhKs "Smart Coffee Machine")</center>
+<center>[![VIDEO](http://img.youtube.com/vi/iuIVYywHhKs/0.jpg)](http://www.youtube.com/watch?v=iuIVYywHhKs)</center>
 
 In 2017 a complete refactory will be done. In this new version the whole stack is inside a Raspberry PI 3.
 The hardware and facial recognition parts will be written in Python 3. A NGINX server and SQLite3 database will make the server side lighter. Only the PHP website will remain.

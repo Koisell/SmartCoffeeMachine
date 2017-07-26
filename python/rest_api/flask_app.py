@@ -14,6 +14,7 @@ users_table = meta.tables['User']
 
 
 def add_route(app):
+    ''' Add routes to a flask app Class. See API swagger doc'''
     @app.route('/users/<id>', methods=['GET'])
     def get_user(id):
         try:
@@ -36,10 +37,14 @@ def add_route(app):
         except KeyError:
             return "Incorrect body", 400
 
+        # Because sqlite engine cannot return created tuple, it's not possible to get the id after creation.
+        # So we retrieve it.
         id_max = engine.execute("SELECT seq FROM SQLITE_SEQUENCE WHERE name='User'").first()
         new_id = id_max[0] + 1
         stmt = users_table.insert().values(id=new_id, name=username, intensity=intensity, volume=volume)
         stmt.execute()
+
+        # Get the create users.
         result = users_table.select().where(users_table.c.id == new_id).execute().first()
         return jsonify(dict(result.items()))
 

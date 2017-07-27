@@ -27,7 +27,6 @@ def add_route(app):
             return jsonify(dict(result.items()))
         else:
             return "User not found", 404
-        return "Hello world"
 
     @app.route('/users', methods=["POST"])
     def new_user():

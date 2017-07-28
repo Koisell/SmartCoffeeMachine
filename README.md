@@ -12,7 +12,7 @@ Go check the video on youtube:
 [![VIDEO](http://img.youtube.com/vi/iuIVYywHhKs/0.jpg)](http://www.youtube.com/watch?v=iuIVYywHhKs)
 
 In 2017 a complete refactory will be done. In this new version the whole stack is inside a Raspberry PI 3.
-The hardware and facial recognition parts will be written in Python 3. A NGINX server and SQLite3 database will make the server side lighter. Only the PHP website will remain.
+The hardware and facial recognition parts will be written in Python 3. A Flask webservice and SQLite3 database will make the server side lighter. Finally the website will be rewrite in HTML5.
 
 
 ## Thanks

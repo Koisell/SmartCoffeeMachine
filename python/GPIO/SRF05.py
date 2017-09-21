@@ -27,7 +27,6 @@ class SRF05():
         GPIO.output(self.pin_trigger, True)
         time.sleep(0.00001)
         GPIO.output(self.pin_trigger, False)
-        start = time.time()
         while GPIO.input(self.pin_echo)==0:
           pulse_start = time.time()
 

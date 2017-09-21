@@ -13,7 +13,7 @@ class MCP3008():
 
     # Function to read SPI data from MCP3008 chip
     # Channel must be an integer 0-7
-    def ReadChannel(channel):
+    def read_channel(channel):
         adc = spi.xfer2([1, (8 + channel) << 4, 0])
         data = ((adc[1] & 3) << 8) + adc[2]
         return data
@@ -22,7 +22,7 @@ class MCP3008():
     # rounded to specified number of decimal places.
 
 
-    def ConvertVolts(data, places):
+    def convert_volts(data, places):
         volts = (data * 3.3) / float(1023)
         volts = round(volts, places)
         return volts
@@ -32,7 +32,7 @@ class MCP3008():
     # number of decimal places.
 
 
-    def ConvertTemp(data, places):
+    def convert_temp(data, places):
 
       # ADC Value
       # (approx)  Temp  Volts

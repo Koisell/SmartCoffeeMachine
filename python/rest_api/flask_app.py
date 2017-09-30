@@ -86,3 +86,8 @@ def add_route(app):
             return "User succesfuly destroyed"
         else:
             return "User not found", 404
+
+    @app.route('/coffee', methods=["GET"])
+    def make_coffee():
+        print(request.values)
+        return "", 200

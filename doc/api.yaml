@@ -1,17 +1,10 @@
-# CoffeeMachine API
 swagger: '2.0'
-
-# This is your document metadata
 info:
-  version: "1.0.0"
+  version: 1.0.0
   title: SmartCoffeeMachine
-
-# Describe your paths here
 paths:
-  # This is a path endpoint. Change it.
-  /users/{id}:
+  '/users/{id}':
     get:
-      # Describe this verb here. Note: you can use markdown
       description: Gets `User` object by is ID.
       parameters:
         - in: path
@@ -22,13 +15,13 @@ paths:
       produces:
         - application/json
       responses:
-        200:
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/User"
-        400:
+            $ref: '#/definitions/User'
+        '400':
           description: Invalid id provided
-        404:
+        '404':
           description: User not found
     delete:
       description: Remove `User`
@@ -39,11 +32,11 @@ paths:
           required: true
           type: integer
       responses:
-        200:
+        '200':
           description: User succesfuly destroyed
-        400:
+        '400':
           description: Invalid ID
-        404:
+        '404':
           description: User not found.
     put:
       description: Modifies `User`
@@ -67,17 +60,16 @@ paths:
                 description: Favorite coffee intensity of the user
               volume:
                 type: integer
-                description: Favorite coffee volume of the user  
+                description: Favorite coffee volume of the user
       responses:
-        204:
+        '204':
           description: User succesfully modified
           schema:
-            $ref: "#/definitions/User"
-        400:
+            $ref: '#/definitions/User'
+        '400':
           description: Invalid ID
-        404:
+        '404':
           description: User not found.
-            
   /users/:
     post:
       description: Creates `User` object.
@@ -87,16 +79,29 @@ paths:
           description: New user.
           required: true
           schema:
-            $ref: "#/definitions/newUser"
+            $ref: '#/definitions/newUser'
       responses:
-        201:
+        '201':
           description: User succesfully created
           schema:
-            $ref: "#/definitions/User"
-        400:
+            $ref: '#/definitions/User'
+        '400':
           description: Incorrect body
-  
-                  
+  /coffee:
+    get:
+      description: Request a coffee
+      parameters:
+        - in: query
+          name: volume
+          type: integer
+          required: true
+        - in: query
+          name: intensity
+          type: integer
+          required: true
+      responses:
+        '200':
+          description: Your coffee in waiting you.
 definitions:
   User:
     type: object
@@ -113,7 +118,6 @@ definitions:
       volume:
         type: integer
         description: Favorite coffee volume of the user
-  
   newUser:
     type: object
     properties:

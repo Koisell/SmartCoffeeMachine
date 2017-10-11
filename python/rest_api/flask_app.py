@@ -40,7 +40,7 @@ def add_route(app):
         # So we retrieve it.
         id_max = engine.execute("SELECT seq FROM SQLITE_SEQUENCE WHERE name='User'").first()
         new_id = id_max[0] + 1
-        stmt = users_table.insert().values(id=new_id, name=username, intensity=intensity, volume=volume)
+        stmt = users_table.insert().values(id=new_id, username=username, intensity=intensity, volume=volume)
         stmt.execute()
 
         # Get the create users.

@@ -61,7 +61,7 @@ def add_route(app):
 
             query = users_table.update().where(users_table.c.id == id)
             if username:
-                query = query.values(name=username)
+                query = query.values(username=username)
             if intensity:
                 query = query.values(intensity=intensity)
             if volume:

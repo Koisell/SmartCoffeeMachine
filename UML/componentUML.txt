@@ -1,0 +1,8 @@
+@startuml
+database BD
+BD - [RecognitionService]
+[RecognitionService] <..> Gateway
+[CoffeeService] <..> Gateway
+Gateway <..> CameraClient
+Gateway <..> Application
+@enduml

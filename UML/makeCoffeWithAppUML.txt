@@ -1,0 +1,8 @@
+@startuml
+actor User
+User -> Application : Insert Preferencies
+Application -> Gateway : doCoffe(preferencies)
+Gateway -> CoffeServices : doCoffe(preferencies)
+CoffeServices --> Gateway : confirmationDoCoffe()
+Gateway --> Application : confirmationDoCofee()
+@enduml

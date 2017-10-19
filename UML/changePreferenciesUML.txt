@@ -1,0 +1,20 @@
+@startuml
+actor User
+
+User -> Application : Insert New Preferencies, Id
+Application -> Gateway : changePreferenciesUser(preferencies,id)
+Gateway -> Reconnaissance : changePreferenciesUser(preferencies,id)
+database BD
+Reconnaissance -> BD :  changePreferenciesUser(preferencies,id)
+
+alt User is in Database
+    BD -> BD : changePreferenciesUser(preferencies,id)
+    BD --> Reconnaissance : OK
+    Reconnaissance --> Gateway : OK
+    Gateway --> Application : OK
+else User is not in DataBase
+    BD --> Reconnaissance : UserNotFound(404)
+    Reconnaissance --> Gateway : UserNotFound(404)
+    Gateway --> Application : UserNotFound(404)
+    end
+@enduml

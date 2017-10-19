@@ -1,0 +1,12 @@
+@startuml
+actor User 
+User -> Application: Enter id
+Application -> Gateway: removeUser(id)
+Gateway -> RecognitionService: removeUser(id)
+database DB
+RecognitionService -> DB: removeUser(id)
+RecognitionService -> RecognitionService: removePhotosFolder(id)
+RecognitionService --> Gateway: OK
+Gateway --> Application: OK
+Application -> User: display("ok")
+@enduml

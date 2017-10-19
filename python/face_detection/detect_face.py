@@ -30,7 +30,7 @@ def main():
     if len(sys.argv) > 1:
         cascPath = sys.argv[1]
     else:
-        cascPath = "/usr/share/OpenCV/haarcascades/haarcascade_frontalface_default.xml"  # Path on fedora 25
+        cascPath = "/usr/local/share/OpenCV/haarcascades/haarcascade_frontalface_default.xml"  # Path on fedora 25
 
     faceCascade = cv2.CascadeClassifier(cascPath)
 

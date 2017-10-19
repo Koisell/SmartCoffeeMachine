@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
-from cv2.face import createLBPHFaceRecognizer
+from cv2.face import LBPHFaceRecognizer_create
 from cv2 import imshow, waitKey, destroyAllWindows, VideoCapture, cvtColor, rectangle, imread
 from cv2 import COLOR_RGB2GRAY
 import sys
 import numpy as np
 from PIL import Image
 from csv import reader as csvreader
-from detect_face import FaceDetector
+from .detect_face import FaceDetector
 
 
 cascPath = "/usr/share/OpenCV/haarcascades/haarcascade_frontalface_default.xml"  # Path on fedora 25
@@ -52,7 +52,7 @@ class Recognizer():
         raise NotImplementedError()
 
     def set_recognizer_xml(self, xmlfile):
-        self.recognizer.load(xmlfile)
+        self.recognizer.read(xmlfile)
 
     def train(self, pictures, labels):
         self.recognizer.train(pictures, np.array(labels))

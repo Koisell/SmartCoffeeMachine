@@ -1,0 +1,17 @@
+@startuml
+actor User 
+User -> Application: Enter preferences
+Application -> User: Ask for selfies
+User -> Application: Take selfies
+Application -> Gateway: addUser(preferences, photos)
+Gateway -> RecognitionService: addUser(preferences, photos)
+database DB
+RecognitionService -> DB: newUser(preferences)
+DB --> RecognitionService: id
+RecognitionService -> RecognitionService: createFolderWithID(id)
+RecognitionService -> RecognitionService: savePhotos(id)
+RecognitionService -> RecognitionService: learnFace(id, photos)
+RecognitionService --> Gateway: id
+Gateway --> Application: id
+Application -> User: display(id)
+@enduml

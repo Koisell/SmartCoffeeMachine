@@ -1,0 +1,22 @@
+@startuml
+=== Loop ==
+FaceDetector -> Camera: detectFace()
+alt User show his face
+    Camera -> FaceDetector: [x,y,h,w], image
+    FaceDetector -> FaceDetector: getFaceImage([x,y,h,w], image)
+    FaceDetector -> Gateway: recognize(faceImage)
+    Gateway -> RecognitionService: recognize(faceImage)
+    RecognitionService --> RecognitionService: id, prob
+    alt bad prob
+        RecognitionService --> Gateway: User not recognized (404)
+        Gateway --> FaceDetector: User not recognized (404)
+    else good prob
+        database DB
+        RecognitionService -> DB: getPreferences(id)
+        DB --> RecognitionService: volume, intensity
+        RecognitionService --> Gateway: volume, intensity
+        Gateway -> CoffeeService: makeCoffee(volume, intensity)
+        CoffeeService --> Gateway: OK (200)
+        Gateway --> FaceDetector: OK (200)
+    end
+@enduml

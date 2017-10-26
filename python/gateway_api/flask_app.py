@@ -2,6 +2,7 @@
 # -*- encoding: UTF-8 -*-
 
 from flask import jsonify, request
+import requests
 
 def add_route(app):
     ''' Add routes to a flask app Class. See API swagger doc'''
@@ -12,13 +13,13 @@ def add_route(app):
         except ValueError:
             return "Invalid id", 400
         print(id)
-        # TO BE IMPLEMENTED
-        # ASK RECOGNITION SERVICE FOR USER(id)
-        raise NotImplementedError()
-        if result:
-            return jsonify(dict(result.items()))
-        else:
-            return "User not found", 404
+
+        try:
+            # Do request on  RECOGNITION SERVICE USER(id)
+            user = requests.get('http://example.com').content
+        except ConnectionError:
+            return "Could not connect to Recognition Service", 421
+        return user, 200
 
     @app.route('/users', methods=["POST"])
     def new_user():
@@ -27,9 +28,21 @@ def add_route(app):
             username, intensity, volume = [body[k] for k in ("username", "intensity", "volume")]
         except KeyError:
             return "Incorrect body", 400
+
         # TO BE IMPLEMENTED
         # ASK RECOGNITION SERVICE TO CREATE USER
         raise NotImplementedError()
+
+        try:
+        # TO BE IMPLEMENTED
+        # ASK RECOGNITION SERVICE TO CREATE USER
+        # Do post on  RECOGNITION SERVICE USER(id)
+            r= requests.post('http://example.com', data = body}).content
+        except ConnectionError:
+            return "Could not connect to Recognition Service", 421
+        return r, 200
+
+
 
     @app.route('/users/<id>', methods=["PUT"])
     def modify_user(id):

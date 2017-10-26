@@ -1,0 +1,20 @@
+@startuml
+actor User
+User -> Application: Enter id
+Application -> Gateway: getUser(id)
+Gateway -> RecognitionService: getUser(id)
+database DB
+RecognitionService -> DB: getUser(id)
+
+alt User is in Database
+    DB --> RecognitionService: returnId(user)
+    RecognitionService --> Gateway: returnId(user)
+    Gateway --> Application: returnId(user)
+    Application --> User: display("user")
+else User is not in DataBase
+    DB --> RecognitionService: UserNotFound(404)
+    RecognitionService --> Gateway: UserNotFound(404)
+    Gateway --> Application: UserNotFound(404)
+    Application --> User: UserNotFound(404)
+    end
+@enduml

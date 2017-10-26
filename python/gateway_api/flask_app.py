@@ -31,7 +31,7 @@ def add_route(app):
 
         # TO BE IMPLEMENTED
         # ASK RECOGNITION SERVICE TO CREATE USER
-        raise NotImplementedError()
+        
 
         try:
         # TO BE IMPLEMENTED

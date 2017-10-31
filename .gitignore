@@ -94,3 +94,6 @@ ENV/
 # plantUML
 *UML.png
 *.png
+
+#Data Base
+*.db

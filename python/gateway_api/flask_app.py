@@ -16,7 +16,7 @@ def add_route(app):
 
         try:
             # Do request on  RECOGNITION SERVICE USER(id)
-            user = requests.get('http://example.com').content
+            user = requests.get('http://localhost:5001/users/'+str(id)).content
         except ConnectionError:
             return "Could not connect to Recognition Service", 421
         return user, 200
@@ -31,13 +31,13 @@ def add_route(app):
 
         # TO BE IMPLEMENTED
         # ASK RECOGNITION SERVICE TO CREATE USER
-        
+
 
         try:
         # TO BE IMPLEMENTED
         # ASK RECOGNITION SERVICE TO CREATE USER
         # Do post on  RECOGNITION SERVICE USER(id)
-            r= requests.post('http://example.com', data = body}).content
+            r= requests.post('http://example.com', data = body).content
         except ConnectionError:
             return "Could not connect to Recognition Service", 421
         return r, 200

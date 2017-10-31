@@ -32,12 +32,8 @@ def add_route(app):
         except KeyError:
             return "Incorrect body", 400
 
-        # TO BE IMPLEMENTED
-        # ASK RECOGNITION SERVICE TO CREATE USER
-        # Do post on  RECOGNITION SERVICE USER(id)
-
         try:
-            r= requests.post(RECOGNITIONSERVICE_URL+'/users/', data = body).content
+            r= requests.post(RECOGNITIONSERVICE_URL+'/users',json = body).content
         except ConnectionError:
             return "Could not connect to Recognition Service", 421
         return r, 200
@@ -50,10 +46,17 @@ def add_route(app):
             id = int(id)
         except ValueError:
             return "Invalid id", 400
-        # TO BE IMPLEMENTED
-        # ASK RECOGNITION SERVICE TO MODIY USER
+        body = request.get_json()
+        try:
+            username, intensity, volume = [body[k] for k in ("username", "intensity", "volume")]
+        except KeyError:
+            return "Incorrect body", 400
 
-        raise NotImplementedError()
+        try:
+            r= requests.put(RECOGNITIONSERVICE_URL+'/users/'+str(id),json = body).content
+        except ConnectionError:
+            return "Could not connect to Recognition Service", 421
+        return r, 200
 
     @app.route('/users/<id>', methods=["DELETE"])
     def delete_user(id):

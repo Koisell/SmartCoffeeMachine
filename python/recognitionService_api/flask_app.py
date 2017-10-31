@@ -83,3 +83,16 @@ def add_route(app):
             return "User succesfuly destroyed"
         else:
             return "User not found", 404
+
+    @app.route('/recognition', methods=["POST"])
+    def recognize_faceimage():
+        if 'image' not in request.files:
+            print('No file part')
+            return "no image", 401
+        file = request.files['image']
+        if file.filename == '':
+            return "Bad REquest", 400
+        file.save(file.filename)
+
+        print("Image received")
+        return "OK", 200

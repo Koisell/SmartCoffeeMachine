@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- encoding: UTF-8 -*-
 
-from flask import jsonify, request
+from flask import jsonify, request,send_file
 import requests
 
 RECOGNITIONSERVICE_URL = 'http://localhost:5001'
@@ -38,8 +38,6 @@ def add_route(app):
             return "Could not connect to Recognition Service", 421
         return response, 200
 
-
-
     @app.route('/users/<id>', methods=["PUT"])
     def modify_user(id):
         try:
@@ -69,9 +67,27 @@ def add_route(app):
         except ConnectionError:
             return "Could not connect to Recognition Service", 421
         return response, 200
+
     @app.route('/coffee', methods=["GET"])
     def make_coffee():
         print(request.values)
         # TO BE IMPLEMENTED
         # ASK COFFE MACHINE TO MAKE COFFE
         raise NotImplementedError()
+
+    # To upload file through flask :
+    # enctype : multipart/form-data
+    @app.route('/recognition', methods=["POST"])
+    def recognize_faceimage():
+        if 'image' not in request.files:
+            print('No file part')
+            return "Bad Request", 400
+        file = request.files['image']
+        try :
+            r = requests.post(RECOGNITIONSERVICE_URL+'/recognition',files = [('image',(file.filename,file))])
+        except ConnectionError:
+            return "Could not connect to Recognition Service", 421
+        return "ok", 200
+        # resquests.post(RECOGNITIONSERVICE_URL+'/recognition',data=file)
+        # TO BE IMPLEMENTED
+        # ASK COFFE MACHINE TO MAKE COFFE

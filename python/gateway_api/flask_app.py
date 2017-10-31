@@ -33,10 +33,10 @@ def add_route(app):
             return "Incorrect body", 400
 
         try:
-            r= requests.post(RECOGNITIONSERVICE_URL+'/users',json = body).content
+            response= requests.post(RECOGNITIONSERVICE_URL+'/users',json = body).content
         except ConnectionError:
             return "Could not connect to Recognition Service", 421
-        return r, 200
+        return response, 200
 
 
 
@@ -53,10 +53,10 @@ def add_route(app):
             return "Incorrect body", 400
 
         try:
-            r= requests.put(RECOGNITIONSERVICE_URL+'/users/'+str(id),json = body).content
+            response= requests.put(RECOGNITIONSERVICE_URL+'/users/'+str(id),json = body).content
         except ConnectionError:
             return "Could not connect to Recognition Service", 421
-        return r, 200
+        return response, 200
 
     @app.route('/users/<id>', methods=["DELETE"])
     def delete_user(id):
@@ -64,11 +64,11 @@ def add_route(app):
             id = int(id)
         except ValueError:
             return "Invalid id", 400
-
-        # TO BE IMPLEMENTED
-        # ASK RECOGNITION SERVICE TO DELETE USER
-        raise NotImplementedError()
-
+        try:
+            response = requests.delete(RECOGNITIONSERVICE_URL+'/users/'+str(id)).content
+        except ConnectionError:
+            return "Could not connect to Recognition Service", 421
+        return response, 200
     @app.route('/coffee', methods=["GET"])
     def make_coffee():
         print(request.values)

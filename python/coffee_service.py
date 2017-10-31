@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 # coding: utf-8
+from os import getenv
+from socket import gethostname
 from collections import deque
-from GPIO.coffee_machine import CoffeeMachine
 from time import sleep
-from threading import Thread
-from socket import socket
+from threading import Thread, Condition
+from flask import Flask, request
+from GPIO.coffee_machine import CoffeeMachine
 
 
 class Command():
@@ -15,72 +17,65 @@ class Command():
     def get_param(self):
         return self.volume, self.intensity
 
+    def __str__(self):
+        return "Command(%s,%s)" % self.get_param()
 
-class WaitingCoffee(deque):
-    def __init__(self, coffee_machine=CoffeeMachine()):
-        super().__init__(maxlen=5)  # No more than 5 coffee in queue
+
+class CoffeeWaiter(Thread):
+    def __init__(self, condition, coffee_machine=CoffeeMachine()):
+        Thread.__init__(self)
+        self.commands = deque(maxlen=5)  # No more than 5 coffee in queue
         self.coffee_machine = coffee_machine
+        self.condition = condition
 
     def is_command(self):
-        return bool(len(self))
+        return bool(len(self.commands))
 
     def make_coffee(self, volume, intensity):
+        print("make coffee")
         self.coffee_machine.make_coffee(volume, intensity)
         sleep(20)  # We wait 20 secs before the next coffee
 
-    def make_coffees(self):
+    def run(self):
+        print("Waiting for coffees")
         while True:
-            if self.is_command():
-                command = self.pop()
-                self.make_coffee(*command.get_param())
-
-
-class ThreadedServer():
-    def __init__(self, host, port, waiter):
-        self.waiter = waiter
-        self.host = host
-        self.port = port
-        self.sock = socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.sock.bind((self.host, self.port))
-
-    def listen(self):
-        self.sock.listen(5)  # Max 5 clients. We only need 2 (webserver and recog interface) + debug
-        Thread(target=self.waiter.make_coffees)
-        while True:
-            client, address = self.sock.accept()
-            client.settimeout(60)
-            Thread(target=self.coffee_commands, args=(client, address)).start()
-
-    def coffee_commands(self, client, address):
-        size = 1024  # Max lengh in bytes
-        while True:
-            try:
-                data = client.recv(size)
-                if data:
-                    msg = data.decode("utf-8")
-                    if msg[0] == "C":
-                        volume, intensity = data[2:].split(",")
-                        self.waiter.appendleft(Command(volume, intensity))
-                        response = "OK"
-                    elif msg == "N":
-                        while not self.waiter.coffee_machine.is_new_cup():
-                            sleep(1)
-                        volume = self.waiter.coffee_machine.get_position_volume()
-                        intensity = self.waiter.coffee_machine.get_position_intensity()
-                        response = "{},{}".format(volume, intensity)
-
-                    response = response.encode("utf-8")  # reponse is bytes
-                    client.send(response)
-                else:
-                    raise Exception('Client disconnected')
-            except Exception:
-                client.close()
-                return False
+            self.condition.acquire()
+            while True:
+                if self.is_command():
+                    command = self.commands.pop()
+                    print("new command:", command)
+                    self.coffee_machine.make_coffee(*command.get_param())
+                    sleep(20)  # Waiting 20 s to get the coffee done.
+                    break
+                self.condition.wait()
+            self.condition.release()
 
 
 def main():
-    raise NotImplementedError()
+    app = Flask(__name__)
+    condition = Condition()  # Used to notify CoffeeWaiter thread to wake up and process coffee.
+    coffee_waiter = CoffeeWaiter(condition)
+    coffee_waiter.start()
+
+    @app.route('/coffee', methods=["GET"])
+    def make_coffee():
+        try:
+            volume, intensity = map(int, [request.args[v] for v in ("volume", "intensity")])
+        except (KeyError, ValueError):
+            return "Incorect body", 400
+
+        if volume < 0 or intensity < 0 or volume > 4 or intensity > 3:
+            return "Incorect body", 400
+
+        condition.acquire()
+        coffee_waiter.commands.appendleft(Command(volume, intensity))
+        condition.notify()
+        condition.release()
+        return "Your coffee just condition you :)", 200
+
+    port = getenv('PORT', '4242')
+
+    app.run(host=gethostname(), port=int(port))
 
 
 if __name__ == '__main__':

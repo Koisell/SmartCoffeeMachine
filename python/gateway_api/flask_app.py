@@ -84,7 +84,7 @@ def add_route(app):
             return "Bad Request", 400
         file = request.files['image']
         try :
-            r = requests.post(RECOGNITIONSERVICE_URL+'/recognition',files = [('image',(file.filename,file))])
+            requests.post(RECOGNITIONSERVICE_URL+'/recognition',files = [('image',(file.filename,file))])
         except ConnectionError:
             return "Could not connect to Recognition Service", 421
         return "ok", 200

@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 # -*- encoding: UTF-8 -*-
 
-from flask import jsonify, request
+from flask import jsonify, request,send_file
 import requests
+
+RECOGNITIONSERVICE_URL = 'http://localhost:5001'
+COFFEMACHINE_URL = 'http://localhost:4242'
 
 def add_route(app):
     ''' Add routes to a flask app Class. See API swagger doc'''
@@ -16,7 +19,7 @@ def add_route(app):
 
         try:
             # Do request on  RECOGNITION SERVICE USER(id)
-            user = requests.get('http://example.com').content
+            user = requests.get(RECOGNITIONSERVICE_URL+'/users/'+str(id)).content
         except ConnectionError:
             return "Could not connect to Recognition Service", 421
         return user, 200
@@ -29,20 +32,11 @@ def add_route(app):
         except KeyError:
             return "Incorrect body", 400
 
-        # TO BE IMPLEMENTED
-        # ASK RECOGNITION SERVICE TO CREATE USER
-        
-
         try:
-        # TO BE IMPLEMENTED
-        # ASK RECOGNITION SERVICE TO CREATE USER
-        # Do post on  RECOGNITION SERVICE USER(id)
-            r= requests.post('http://example.com', data = body}).content
+            response= requests.post(RECOGNITIONSERVICE_URL+'/users',json = body).content
         except ConnectionError:
             return "Could not connect to Recognition Service", 421
-        return r, 200
-
-
+        return response, 200
 
     @app.route('/users/<id>', methods=["PUT"])
     def modify_user(id):
@@ -50,10 +44,17 @@ def add_route(app):
             id = int(id)
         except ValueError:
             return "Invalid id", 400
-        # TO BE IMPLEMENTED
-        # ASK RECOGNITION SERVICE TO MODIY USER
+        body = request.get_json()
+        try:
+            username, intensity, volume = [body[k] for k in ("username", "intensity", "volume")]
+        except KeyError:
+            return "Incorrect body", 400
 
-        raise NotImplementedError()
+        try:
+            response= requests.put(RECOGNITIONSERVICE_URL+'/users/'+str(id),json = body).content
+        except ConnectionError:
+            return "Could not connect to Recognition Service", 421
+        return response, 200
 
     @app.route('/users/<id>', methods=["DELETE"])
     def delete_user(id):
@@ -61,10 +62,11 @@ def add_route(app):
             id = int(id)
         except ValueError:
             return "Invalid id", 400
-
-        # TO BE IMPLEMENTED
-        # ASK RECOGNITION SERVICE TO DELETE USER
-        raise NotImplementedError()
+        try:
+            response = requests.delete(RECOGNITIONSERVICE_URL+'/users/'+str(id)).content
+        except ConnectionError:
+            return "Could not connect to Recognition Service", 421
+        return response, 200
 
     @app.route('/coffee', methods=["GET"])
     def make_coffee():
@@ -72,3 +74,20 @@ def add_route(app):
         # TO BE IMPLEMENTED
         # ASK COFFE MACHINE TO MAKE COFFE
         raise NotImplementedError()
+
+    # To upload file through flask :
+    # enctype : multipart/form-data
+    @app.route('/recognition', methods=["POST"])
+    def recognize_faceimage():
+        if 'image' not in request.files:
+            print('No file part')
+            return "Bad Request", 400
+        file = request.files['image']
+        try :
+            r = requests.post(RECOGNITIONSERVICE_URL+'/recognition',files = [('image',(file.filename,file))])
+        except ConnectionError:
+            return "Could not connect to Recognition Service", 421
+        return "ok", 200
+        # resquests.post(RECOGNITIONSERVICE_URL+'/recognition',data=file)
+        # TO BE IMPLEMENTED
+        # ASK COFFE MACHINE TO MAKE COFFE

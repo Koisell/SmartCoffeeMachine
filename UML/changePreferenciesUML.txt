@@ -3,18 +3,18 @@ actor User
 
 User -> Application : Insert New Preferencies, Id
 Application -> Gateway : changePreferenciesUser(preferencies,id)
-Gateway -> Reconnaissance : changePreferenciesUser(preferencies,id)
+Gateway -> RecognitionService : changePreferenciesUser(preferencies,id)
 database BD
-Reconnaissance -> BD :  changePreferenciesUser(preferencies,id)
+RecognitionService -> BD :  modify_user(preferencies,id)
 
 alt User is in Database
     BD -> BD : changePreferenciesUser(preferencies,id)
-    BD --> Reconnaissance : OK
-    Reconnaissance --> Gateway : OK
+    BD --> RecognitionService : OK
+    RecognitionService --> Gateway : OK
     Gateway --> Application : OK
 else User is not in DataBase
-    BD --> Reconnaissance : UserNotFound(404)
-    Reconnaissance --> Gateway : UserNotFound(404)
+    BD --> RecognitionService : UserNotFound(404)
+    RecognitionService --> Gateway : UserNotFound(404)
     Gateway --> Application : UserNotFound(404)
     end
 @enduml

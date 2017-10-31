@@ -8,7 +8,7 @@ def main():
     app = Flask(__name__)
     add_route(app)
 
-    port = getenv('PORT', '5000')
+    port = getenv('PORT', '5001')
     app.run(host=gethostname(), port=int(port))
 
 

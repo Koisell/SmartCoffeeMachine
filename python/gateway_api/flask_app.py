@@ -1,11 +1,27 @@
 #!/usr/bin/env python3
 # -*- encoding: UTF-8 -*-
 
-from flask import jsonify, request,send_file
+from flask import jsonify, request,send_file, Response, stream_with_context
 import requests
+from requests.exceptions import ConnectionError, Timeout
 
 RECOGNITIONSERVICE_URL = 'http://localhost:5001'
 COFFEMACHINE_URL = 'http://localhost:4242'
+
+
+def forward_request(method, route, request):
+    try:
+        response = method(route, params=request.args)
+    except ConnectionError:
+        return "Service unevailable", 503
+    except Timeout:
+        return "Gateway timeout", 504
+
+    if response.status_code >= 500:
+        return "Bad gateway", 501
+
+    return Response(response.text, status=response.status_code, content_type=response.headers['content-type'])
+
 
 def add_route(app):
     ''' Add routes to a flask app Class. See API swagger doc'''
@@ -70,10 +86,7 @@ def add_route(app):
 
     @app.route('/coffee', methods=["GET"])
     def make_coffee():
-        print(request.values)
-        # TO BE IMPLEMENTED
-        # ASK COFFE MACHINE TO MAKE COFFE
-        raise NotImplementedError()
+        return forward_request(requests.get, COFFEMACHINE_URL + '/coffee', request)
 
     # To upload file through flask :
     # enctype : multipart/form-data

@@ -61,11 +61,13 @@ def main():
     def make_coffee():
         try:
             volume, intensity = map(int, [request.args[v] for v in ("volume", "intensity")])
-        except (KeyError, ValueError):
-            return "Incorect body", 400
+        except KeyError:
+            return "Incorect query: missing parameters", 400
+        except ValueError:
+            return "Incorect query: invalid parameter type, must be positiv integer", 400
 
         if volume < 0 or intensity < 0 or volume > 4 or intensity > 3:
-            return "Incorect body", 400
+            return "Incorect query: parameters must be in ranges given in doc", 400
 
         condition.acquire()
         coffee_waiter.commands.appendleft(Command(volume, intensity))

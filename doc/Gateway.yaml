@@ -1,0 +1,36 @@
+openapi: 3.0.0
+servers:
+  - url: 'http://localhost:5000'
+    description: On Raspberry PI
+  - url: 'http://{ip}:{port}'
+    variables:
+      ip:
+        default: 172.18.23.105
+        description: Current ip of the service
+      port:
+        default: '5000'
+        description: Current port of the service
+info:
+  version: 1.1.0
+  title: Gateway
+paths:
+  /coffee:
+    get:
+      description: Request a coffee
+      responses:
+        '200':
+          description: Your coffee is waiting you.
+        '502':
+          description: Bad gateway.
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Gateway timeout.
+        4XX:
+          description: See documentation of CoffeeMachineService
+  /doc/coffee_machine:
+    get:
+      description: Return swagger file (yaml) of the CoffeeMachineService.
+      responses:
+        '200':
+          description: OK.

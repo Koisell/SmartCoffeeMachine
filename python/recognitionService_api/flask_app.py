@@ -21,7 +21,7 @@ def add_route(app):
         print(id)
         result = users_table.select().where(users_table.c.id == id).execute().first()
         if result:
-            return jsonify(dict(result.items()))
+            return jsonify(dict(result.items())),200
         else:
             return "User not found", 404
 

@@ -34,3 +34,10 @@ paths:
       responses:
         '200':
           description: OK.
+
+  /doc/gateway:
+    get:
+      description: Return swagger file (yaml) of this Service.
+      responses:
+        '200':
+          description: OK.

@@ -1,6 +1,6 @@
 openapi: 3.0.0
 servers:
-  - url: 'http://localhost:5000'
+  - url: 'http://localhost:4242'
     description: On Raspberry PI
   - url: 'http://{ip}:{port}'
     variables:
@@ -8,86 +8,30 @@ servers:
         default: 172.18.23.105
         description: Current ip of the service
       port:
-        default: '5000'
+        default: '4242'
         description: Current port of the service
 info:
   version: 1.1.0
-  title: Gateway
-components:
-  schemas:
-    User:
-      $ref: '#/components/schemas/User'
-      description: User stored in DB
-      type: object
-      properties:
-        id:
-          type: integer
-          description: The user ID.
-        username:
-          type: string
-          description: The user name.
-        intensity:
-          type: integer
-        description: Favorite coffee intensity of the user
-        volume:
-          type: integer
-          description: Favorite coffee volume of the user
+  title: CoffeeMachineService
 paths:
   /coffee:
     get:
       description: Request a coffee
+      parameters:
+        - in: query
+          name: volume
+          description: must be between 0 and 4
+          schema:
+            type: integer
+          required: true
+        - in: query
+          name: intensity
+          description: must be between 0 and 3
+          schema:
+            type: integer
+          required: true
       responses:
         '200':
           description: Your coffee is waiting you.
-        '502':
-          description: Bad gateway.
-        '503':
-          description: Service unavailable.
-        '504':
-          description: Gateway timeout.
-        4XX:
-          description: See documentation of CoffeeMachineService
-  '/users/{id}':
-    get:
-      description: Gets 'User' object by ID.
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '502':
-          description: Bad gateway.
-        '503':
-          description: Service unavailable.
-        '504':
-          description: Gateway timeout.
-        4XX:
-          description: See documentation of CoffeeMachineService
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: ID of User to use
-          schema:
-            type: integer
-    put:
-      description: Modify An User by id
-      responses:
-        '200':
-          description: OK
-        '502':
-          description: Bad gateway.
-        '503':
-          description: Service unavailable.
-        '504':
-          description: Gateway timeout.
-        4XX:
-          description: See documentation of CoffeeMachineService
-  /doc/coffee_machine:
-    get:
-      description: Return swagger file (yaml) of the CoffeeMachineService.
-      responses:
-        '200':
-          description: OK.
+        '400':
+          description: you have provide an invalid query.

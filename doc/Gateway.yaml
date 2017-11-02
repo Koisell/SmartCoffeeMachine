@@ -13,6 +13,25 @@ servers:
 info:
   version: 1.1.0
   title: Gateway
+components:
+  schemas:
+    User:
+      $ref: '#/components/schemas/User'
+      description: User stored in DB
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The user ID.
+        username:
+          type: string
+          description: The user name.
+        intensity:
+          type: integer
+        description: Favorite coffee intensity of the user
+        volume:
+          type: integer
+          description: Favorite coffee volume of the user
 paths:
   /coffee:
     get:
@@ -34,7 +53,44 @@ paths:
       responses:
         '200':
           description: OK.
-
+  /users/{id}:
+    get:
+      description: Gets 'User' object by ID.
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '502':
+          description: Bad gateway.
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Gateway timeout.
+        4XX:
+          description: See documentation of CoffeeMachineService
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of User to use
+          schema:
+            type: integer
+    put:
+      description: Modify An User by id
+      responses:
+        '200':
+          description: OK
+        '502':
+          description: Bad gateway.
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Gateway timeout.
+        4XX:
+          description: See documentation of CoffeeMachineService
   /doc/gateway:
     get:
       description: Return swagger file (yaml) of this Service.

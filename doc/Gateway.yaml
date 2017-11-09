@@ -91,7 +91,55 @@ paths:
           description: Gateway timeout.
         4XX:
           description: See documentation of CoffeeMachineService
-  /doc/gateway:
+    parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of User to use
+          schema:
+            type: integer
+    delete:
+      description: Delete User by its id
+      responses:
+        "200":
+          description: User succesfuly destroyed
+        '502':
+          description: Bad gateway.
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Gateway timeout.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of User to use
+          schema:
+            type: integer
+  /users:
+    post:
+      description: Create New User
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '502':
+          description: Bad gateway.
+        '503':
+          description: Service unavailable.
+        '504':
+          description: Gateway timeout.
+        4XX:
+          description: See documentation of CoffeeMachineService
+      parameters:
+        - in: query
+          name: id of new Use
+          schema:
+            $ref: '#/components/schemas/User'
+  /help:
     get:
       description: Return swagger file (yaml) of this Service.
       responses:

@@ -5,7 +5,7 @@ servers:
   - url: 'http://{ip}:{port}'
     variables:
       ip:
-        default: 172.18.23.105
+        default: 172.18.22.86
         description: Current ip of the service
       port:
         default: '5000'
@@ -53,7 +53,13 @@ paths:
       responses:
         '200':
           description: OK.
-  /users/{id}:
+  /doc/gateway:
+    get:
+      description: Return swagger file (yaml) of this Service.
+      responses:
+        '200':
+          description: OK.
+  '/users/{id}':
     get:
       description: Gets 'User' object by ID.
       responses:
@@ -92,16 +98,16 @@ paths:
         4XX:
           description: See documentation of CoffeeMachineService
     parameters:
-        - name: id
-          in: path
-          required: true
-          description: ID of User to use
-          schema:
-            type: integer
+      - name: id
+        in: path
+        required: true
+        description: ID of User to use
+        schema:
+          type: integer
     delete:
       description: Delete User by its id
       responses:
-        "200":
+        '200':
           description: User succesfuly destroyed
         '502':
           description: Bad gateway.
@@ -120,7 +126,7 @@ paths:
     post:
       description: Create New User
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:

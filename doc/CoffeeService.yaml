@@ -20,13 +20,13 @@ paths:
       parameters:
         - in: query
           name: volume
-          description: must be between 0 and 4
+          description: must be between 0 and 3
           schema:
             type: integer
           required: true
         - in: query
           name: intensity
-          description: must be between 0 and 3
+          description: must be between 0 and 4
           schema:
             type: integer
           required: true

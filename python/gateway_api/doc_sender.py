@@ -12,3 +12,7 @@ def add_doc(app, path_to_doc):
     @app.route("/doc/gateway")
     def send_gateway_doc():
         return send_from_directory(path_to_doc, "Gateway.yaml", as_attachment=True)
+
+    @app.route("/help")
+    def send_help():
+        return send_from_directory(path_to_doc, "Gateway.yaml", as_attachment=True)

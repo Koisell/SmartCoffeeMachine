@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 # -*- encoding: UTF-8 -*-
 
+import os
 from flask import jsonify, request,send_file, Response, stream_with_context
 import requests
 from requests.exceptions import ConnectionError, Timeout
 
-RECOGNITIONSERVICE_URL = 'http://localhost:5001'
-COFFEMACHINE_URL = 'http://localhost:4242'
+RECOGNITIONSERVICE_URL = os.environ.get('RECOGNITIONSERVICE_URL', 'http://localhost:5001')
+COFFEMACHINE_URL = os.environ.get('COFFEMACHINE_URL', 'http://localhost:4242')
 
 
 def forward_request(method, route, request):

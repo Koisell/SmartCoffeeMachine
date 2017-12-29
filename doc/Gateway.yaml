@@ -28,7 +28,7 @@ components:
           description: The user name.
         intensity:
           type: integer
-        description: Favorite coffee intensity of the user
+          description: Favorite coffee intensity of the user
         volume:
           type: integer
           description: Favorite coffee volume of the user
@@ -56,6 +56,12 @@ paths:
   /doc/gateway:
     get:
       description: Return swagger file (yaml) of this Service.
+      responses:
+        '200':
+          description: OK.
+  /doc/recognition:
+    get:
+      description: Return swagger file (yaml) of the RecognitionService.
       responses:
         '200':
           description: OK.

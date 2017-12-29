@@ -21,7 +21,7 @@ def add_route(app):
         print(id)
         result = users_table.select().where(users_table.c.id == id).execute().first()
         if result:
-            return jsonify(dict(result.items())),200
+            return jsonify(dict(result.items())), 200
         else:
             return "User not found", 404
 
@@ -30,7 +30,7 @@ def add_route(app):
         body = request.get_json()
         try:
             username, intensity, volume = [body[k] for k in ("username", "intensity", "volume")]
-        except KeyError:
+        except (KeyError, TypeError):
             return "Incorrect body", 400
 
         # Because sqlite engine cannot return created tuple, it's not possible to get the id after creation.

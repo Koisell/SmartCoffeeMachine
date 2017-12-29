@@ -12,7 +12,8 @@ COFFEMACHINE_URL = os.environ.get('COFFEMACHINE_URL', 'http://localhost:4242')
 
 def forward_request(method, route, request):
     try:
-        response = method(route, params=request.args)
+        print(request.data)
+        response = method(route, params=request.args, data=request.data, headers=request.headers)
     except ConnectionError:
         return "Service unevailable", 503
     except Timeout:
@@ -32,11 +33,11 @@ def add_route(app):
 
     @app.route('/users', methods=["POST"])
     def new_user():
-        forward_request(requests.post, RECOGNITIONSERVICE_URL + '/users', request)
+        return forward_request(requests.post, RECOGNITIONSERVICE_URL + '/users', request)
 
     @app.route('/users/<id>', methods=["PUT"])
     def modify_user(id):
-        forward_request(requests.put, RECOGNITIONSERVICE_URL + '/users/' + str(id), request)
+        return forward_request(requests.put, RECOGNITIONSERVICE_URL + '/users/' + str(id), request)
 
     @app.route('/users/<id>', methods=["DELETE"])
     def delete_user(id):

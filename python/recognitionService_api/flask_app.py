@@ -39,7 +39,6 @@ def add_route(app):
         new_id = id_max[0] + 1
         stmt = users_table.insert().values(id=new_id, username=username, intensity=intensity, volume=volume)
         stmt.execute()
-
         # Get the create users.
         result = users_table.select().where(users_table.c.id == new_id).execute().first()
         return jsonify(dict(result.items()))

@@ -15,7 +15,7 @@ def add_doc(app, path_to_doc):
 
     @app.route("/doc/recognition")
     def send_recognition_doc():
-        return send_from_directory(path_to_doc, "api.yaml", as_attachment=True)
+        return send_from_directory(path_to_doc, "Recognition.yaml", as_attachment=True)
 
     @app.route("/help")
     def send_help():

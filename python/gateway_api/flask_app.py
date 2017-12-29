@@ -2,7 +2,7 @@
 # -*- encoding: UTF-8 -*-
 
 import os
-from flask import jsonify, request,send_file, Response, stream_with_context
+from flask import jsonify, request, send_file, Response, stream_with_context
 import requests
 from requests.exceptions import ConnectionError, Timeout
 
@@ -28,62 +28,19 @@ def add_route(app):
     ''' Add routes to a flask app Class. See API swagger doc'''
     @app.route('/users/<id>', methods=['GET'])
     def get_user(id):
-        try:
-            id = int(id)
-        except ValueError:
-            return "Invalid id", 400
-        print(id)
-
-        try:
-            # Do request on  RECOGNITION SERVICE USER(id)
-            user = requests.get(RECOGNITIONSERVICE_URL+'/users/'+str(id)).content
-        except ConnectionError:
-            return "Could not connect to Recognition Service", 421
-        return user, 200
+        return forward_request(requests.get, RECOGNITIONSERVICE_URL + '/users/' + str(id), request)
 
     @app.route('/users', methods=["POST"])
     def new_user():
-        body = request.get_json()
-        try:
-            username, intensity, volume = [body[k] for k in ("username", "intensity", "volume")]
-        except KeyError:
-            return "Incorrect body", 400
-
-        try:
-            response= requests.post(RECOGNITIONSERVICE_URL+'/users',json = body).content
-        except ConnectionError:
-            return "Could not connect to Recognition Service", 421
-        return response, 200
+        forward_request(requests.post, RECOGNITIONSERVICE_URL + '/users', request)
 
     @app.route('/users/<id>', methods=["PUT"])
     def modify_user(id):
-        try:
-            id = int(id)
-        except ValueError:
-            return "Invalid id", 400
-        body = request.get_json()
-        try:
-            username, intensity, volume = [body[k] for k in ("username", "intensity", "volume")]
-        except KeyError:
-            return "Incorrect body", 400
-
-        try:
-            response= requests.put(RECOGNITIONSERVICE_URL+'/users/'+str(id),json = body).content
-        except ConnectionError:
-            return "Could not connect to Recognition Service", 421
-        return response, 200
+        forward_request(requests.put, RECOGNITIONSERVICE_URL + '/users/' + str(id), request)
 
     @app.route('/users/<id>', methods=["DELETE"])
     def delete_user(id):
-        try:
-            id = int(id)
-        except ValueError:
-            return "Invalid id", 400
-        try:
-            response = requests.delete(RECOGNITIONSERVICE_URL+'/users/'+str(id)).content
-        except ConnectionError:
-            return "Could not connect to Recognition Service", 421
-        return response, 200
+        return forward_request(requests.delete, RECOGNITIONSERVICE_URL + '/users/' + str(id), request)
 
     @app.route('/coffee', methods=["GET"])
     def make_coffee():

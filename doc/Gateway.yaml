@@ -82,7 +82,7 @@ paths:
         '504':
           description: Gateway timeout.
         4XX:
-          description: See documentation of CoffeeMachineService
+          description: See documentation of RecognitionService
       parameters:
         - name: id
           in: path
@@ -102,7 +102,7 @@ paths:
         '504':
           description: Gateway timeout.
         4XX:
-          description: See documentation of CoffeeMachineService
+          description: See documentation of RecognitionService
     parameters:
       - name: id
         in: path
@@ -121,6 +121,8 @@ paths:
           description: Service unavailable.
         '504':
           description: Gateway timeout.
+        4XX:
+          description: See documentation of RecognitionService
       parameters:
         - name: id
           in: path
@@ -145,7 +147,7 @@ paths:
         '504':
           description: Gateway timeout.
         4XX:
-          description: See documentation of CoffeeMachineService
+          description: See documentation of RecognitionService
       parameters:
         - in: query
           name: id of new Use

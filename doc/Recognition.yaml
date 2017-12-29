@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   version: 1.0.0
-  title: SmartCoffeeMachine
+  title: RecognitionService
 paths:
   '/users/{id}':
     get:
@@ -87,21 +87,6 @@ paths:
             $ref: '#/definitions/User'
         '400':
           description: Incorrect body
-  /coffee:
-    get:
-      description: Request a coffee
-      parameters:
-        - in: query
-          name: volume
-          type: integer
-          required: true
-        - in: query
-          name: intensity
-          type: integer
-          required: true
-      responses:
-        '200':
-          description: Your coffee in waiting you.
 definitions:
   User:
     type: object

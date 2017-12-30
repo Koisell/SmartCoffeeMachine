@@ -1,13 +1,21 @@
+from os import remove
 from flask import jsonify, request
 from sqlalchemy import create_engine
 from sqlalchemy.schema import MetaData
 from sqlite3 import dbapi2 as sqlite
+
+from cv2 import imread, COLOR_RGB2GRAY, cvtColor
+from cv2.face import LBPHFaceRecognizer_create
+from faces_recognizer import Recognizer
+
 
 engine = create_engine('sqlite+pysqlite:///../sqlite/cafeDB.db', module=sqlite)
 meta = MetaData()
 meta.reflect(bind=engine)
 meta.bind = engine
 users_table = meta.tables['User']
+recognizer = Recognizer(LBPHFaceRecognizer_create)
+recognizer.set_recognizer_xml('faces.xml')
 
 
 def add_route(app):
@@ -86,12 +94,16 @@ def add_route(app):
     @app.route('/recognition', methods=["POST"])
     def recognize_faceimage():
         if 'image' not in request.files:
-            print('No file part')
             return "no image", 401
         file = request.files['image']
         if file.filename == '':
-            return "Bad REquest", 400
+            return "Bad Request", 400
         file.save(file.filename)
 
-        print("Image received")
-        return "OK", 200
+        id, prob = recognizer.predict(cvtColor(imread(file.filename), COLOR_RGB2GRAY))
+        result = users_table.select().where(users_table.c.id == id).execute().first()
+        remove(file.filename)
+        if result:
+            return jsonify(dict(result.items()))
+        else:
+            return "User unsucessfully recognized", 400

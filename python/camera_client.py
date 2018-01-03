@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
+import os
 import sys
 from threading import Thread
 from requests import post
@@ -8,9 +9,9 @@ from requests.exceptions import ConnectionError, Timeout
 from cv2 import VideoCapture
 from cv2 import imshow, waitKey, cvtColor, rectangle
 from cv2 import COLOR_RGB2GRAY, imwrite
-from face_detection.detect_face import FaceDetector
+from detect_face import FaceDetector
 
-GATEWAY_ROUTE = 'http://latitude3560-nfrancois:5000/recognition'
+GATEWAY_ROUTE = os.environ.get('GATEWAY_ROUTE', 'http://localhost:5000/recognition')
 
 
 class GetCoffeeThread(Thread):
@@ -26,7 +27,7 @@ class GetCoffeeThread(Thread):
             GetCoffeeThread.nb_instance = 1
             try:
                 with open(self.image, "rb") as f:
-                    post(self.service_url, files=[('image', (f.name, f))])
+                    response = post(self.service_url, files=[('image', (f.name, f))])
             except (ConnectionError, Timeout):
                 print("Connection error")
             GetCoffeeThread.nb_instance = 0
@@ -41,7 +42,7 @@ def main():
     video_capture = VideoCapture(0)
     face_detector = FaceDetector(casc_path, min_face_dim=(200, 200))
 
-    w, h = 0, 0 
+    w, h = 0, 0
     while True:
         # Capture frame-by-frame
         ret, frame = video_capture.read()
@@ -53,7 +54,7 @@ def main():
         # Draw a rectangle around the faces
         for (x, y, w, h) in faces:
             rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            print(w,h)
+            print(w, h)
             if w > 300 and h > 300 and len(faces) == 1 and GetCoffeeThread.nb_instance == 0:
                 imwrite("/tmp/face.png", frame[y: y + h, x: x + w])
                 GetCoffeeThread(GATEWAY_ROUTE, "/tmp/face.png").start()

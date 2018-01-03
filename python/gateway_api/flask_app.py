@@ -55,11 +55,28 @@ def add_route(app):
             print('No file part')
             return "Bad Request", 400
         file = request.files['image']
-        try :
-            requests.post(RECOGNITIONSERVICE_URL+'/recognition',files = [('image',(file.filename,file))])
+        try:
+            response = requests.post(RECOGNITIONSERVICE_URL + '/recognition', files=[('image', (file.filename, file))])
         except ConnectionError:
-            return "Could not connect to Recognition Service", 421
-        return "ok", 200
-        # resquests.post(RECOGNITIONSERVICE_URL+'/recognition',data=file)
-        # TO BE IMPLEMENTED
-        # ASK COFFE MACHINE TO MAKE COFFE
+            return "RecognitionService unevailable", 503
+        except Timeout:
+            return "Gateway timeout", 504
+
+        if response.status_code >= 500:
+            return "Bad gateway", 501
+
+        try:
+            params = response.json()
+        except Exception:
+            return "Bad gateway", 501
+
+        try:
+            response = requests.get(COFFEMACHINE_URL + '/coffee', params=params)
+        except ConnectionError:
+            return "CoffeeMachineService unevailable", 503
+        except Timeout:
+            return "Gateway timeout", 504
+
+        if response.status_code >= 400:
+            return "Bad gateway", 501
+        return response.text, 200

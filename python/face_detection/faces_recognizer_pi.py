@@ -19,15 +19,15 @@ def main():
     recognizer = Recognizer(createLBPHFaceRecognizer)
     recognizer.set_recognizer_xml("faces.xml")
 
-    cascPath = "/home/pi/opencv-3.2.0/data/haarcascades/haarcascade_frontalface_default.xml"  # Path on pi
+    casc_path = "/home/pi/opencv-3.2.0/data/haarcascades/haarcascade_frontalface_default.xml"  # Path on pi
 
     video_capture = PiCamera()
     video_capture.resolution = (640, 480)
     video_capture.framerate = 24
-    rawCapture = PiRGBArray(video_capture, size=(640, 480))
-    face_detector = FaceDetector(cascPath, min_face_dim=(100, 100))
+    raw_capture = PiRGBArray(video_capture, size=(640, 480))
+    face_detector = FaceDetector(casc_path, min_face_dim=(100, 100))
 
-    for frame in video_capture.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+    for frame in video_capture.capture_continuous(raw_capture, format="bgr", use_video_port=True):
         # Capture frame-by-frame
         frame = frame.array
 
@@ -50,7 +50,7 @@ def main():
             break
 
     # When everything is done, release the capture
-        rawCapture.truncate(0)
+        raw_capture.truncate(0)
 
     destroyAllWindows()
 

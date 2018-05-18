@@ -5,142 +5,231 @@
 import RPi.GPIO as GPIO
 from time import sleep
 from functools import partial
-
+import spidev
 
 class CoffeeMachine():
-    standart_time = 0.1
+    
 
     # we should make a conf file to setup pin...
     def __init__(self):
-        GPIO.setmode(GPIO.BCM)
+        GPIO.setmode(GPIO.BOARD)
+        #GPIO.setmode(GPIO.BCM)
+        GPIO.setup(32, GPIO.OUT, initial=GPIO.LOW)
+        self.standart_time = 0.1
 
+        # Make coffe
         self.pin_single_coffee_button = 7
-        self.pin_right_volume = 15
+
+        # Make rotation volume
+        self.pin_right_volume = 29
         self.pin_left_volume = 16
+
+        # Push button intensity
         self.pin_intensity = 11
+        
+        self.pin_volume_captor = 18 #?
 
-        self.actuator_pin_list = [self.pin_single_coffee_button, self.pin_right_volume, self.pin_left_volume, self.pin_intensity]
+        self.actuator_pin_list = [self.pin_volume_captor, self.pin_single_coffee_button, self.pin_right_volume, self.pin_left_volume, self.pin_intensity]
 
-        self.pin_intensity_captor = 17
-        self.pin_volume_captor = 18
-        self.pin_water = 5
-        self.volume_captor = None  # to do: implement class
-        self.intensity_captor = None
+        #self.pin_intensity_captor = 17 #?
+        #self.pin_volume_captor = 18 #?
+        #self.pin_water = 5 #?
+        self.volume_captor = 1  # to do: implement class
+        self.intensity_captor = 6
 
-        self.pin_sonar1 = 13
-        self.pin_sonar2 = 14
-        self.captor_pin_list = [self.pin_intensity_captor, self.pin_volume_captor, self.pin_water]
+        #self.pin_sonar1 = 13
+        #self.pin_sonar2 = 14
+        #self.captor_pin_list = [self.pin_intensity_captor, self.pin_volume_captor, self.pin_water] #?
 
-        self.old_is_cup = self.is_cup()
-        self.new_is_cup = self.is_cup()
+        #self.old_is_cup = self.is_cup()
+        #self.new_is_cup = self.is_cup()
 
         GPIO.setup(self.actuator_pin_list, GPIO.OUT, initial=GPIO.LOW)
-        GPIO.setup(self.captor_pin_list, GPIO.IN)
+        #GPIO.setup(self.captor_pin_list, GPIO.IN)
 
-    @staticmethod
     def rotate(pin1, pin2, standart_time):
+        print("Rotation on pins :",pin1,pin2)
         GPIO.output(pin1, GPIO.HIGH)
-        sleep(standart_time * .5)
+        sleep(standart_time * 0.5)
         GPIO.output(pin2, GPIO.HIGH)
-        sleep(standart_time * .5)
+        sleep(standart_time * 0.5)
         GPIO.output(pin1, GPIO.LOW)
-        sleep(standart_time * .5)
+        sleep(standart_time * 0.5)
         GPIO.output(pin2, GPIO.LOW)
 
-    @staticmethod
     def push_button(pin, standart_time):
+        print("Push on pin :",pin,standart_time)
         GPIO.output(pin, GPIO.HIGH)
-        sleep(standart_time)
+        sleep(standart_time* 0.5)
         GPIO.output(pin, GPIO.LOW)
 
     def make_coffee(self, volume, intensity):
+        print("Making Coffee...")
+        print("Volume Wanted    :",volume)
+        print("Intensity Wanted :",intensity)
         # Waiting to refull water tank
-        while not self.is_ready():
-            sleep(1)
+        #while not self.is_ready():
+            #sleep(1)
 
-        self.set_volume(volume)
-        self.set_intensity(intensity)
-        CoffeeMachine.push_button(self.pin_single_coffee_button, self.standart_time)
+        problem_intensity=False
+        problem_volume=False
+
+        try:
+            self.set_intensity(intensity)
+        except Exception as e:
+            problem_intensity=True
+            print(str(e))
+
+        try:
+            self.set_volume(volume)
+        except Exception as e:
+            problem_volume=True
+            print(str(e))
+
+        try:
+            CoffeeMachine.push_button(self.pin_single_coffee_button, self.standart_time)
+        except Exception as e:
+            print(str(e))
+            
+        print("Making Coffee Done !")
+        if problem_intensity:
+            print("But there was a problem reading intensity captor (default Intensity was used)")
+        if problem_volume:
+            print("But there was a problem reading intensity captor (default Volume was used)")
         return True
 
-    # f selection is the fonction to change leds position
-    @staticmethod
-    def set_preference(choice, f_selection, light_captor, nb_choices):
-        if choice >= nb_choices:
-            raise ValueError("choise must be between 0 and nb_choices")
-        position = CoffeeMachine.get_position(f_selection, light_captor, nb_choices)
-        nb_pulse = (choice - position) % nb_choices
-        for i in range(nb_pulse):
-            f_selection()
+    def ReadChannel(channel):
+        spi = spidev.SpiDev()
+        spi.open(0, 0)
+        adc = spi.xfer2([1, (8 + channel) << 4, 0])
+        data = ((adc[1] & 3) << 8) + adc[2]
+        spi.close()
+        return data
+
+    def ConvertVolts(data, places):
+        volts = (data * 3.3) / float(1023)
+        volts = round(volts, places)
+        return volts
+
+    def ConvertTemp(data, places):
+
+        # ADC Value
+        # (approx)  Temp  Volts
+        #    0      -50    0.00
+        #   78      -25    0.25
+        #  155        0    0.50
+        #  233       25    0.75
+        #  310       50    1.00
+        #  465      100    1.50
+        #  775      200    2.50
+        # 1023      280    3.30
+
+        temp = ((data * 330) / float(1023)) - 50
+        temp = round(temp, places)
+        return temp
+
+    def read_values(self, pin_to_read):
+        print("\tReading Values....",pin_to_read)
+        channels = list(range(8))
+        # Read the light sensor data
+        light_levels = [0 for i in range(8)]
+        light_volts = [0 for i in range(8)]
+        #light_level = ReadChannel(light_channel)
+        #light_volts = ConvertVolts(light_level, 2)
+        bin = [0 for i in range(8)]
+        # Read the temperature sensor data
+        #temp_level = ReadChannel(temp_channel)
+        #temp_volts = ConvertVolts(temp_level, 2)
+        #temp = ConvertTemp(temp_level, 2)
+        for i, nb in enumerate(channels):
+            light_levels[i] = CoffeeMachine.ReadChannel(nb)
+            light_volts[i] = CoffeeMachine.ConvertVolts(light_levels[i],2)
+            if light_volts[i] > 2:
+                bin[i] = 1
+        print("\tValues from Captors :",*bin)
+        print("I RETRUN :",bin[pin_to_read-1])
+        return bin[pin_to_read-1]
+        print("\tReading Values Done",pin_to_read)
+        return True
 
     def set_intensity(self, intensity):
-        f = partial(self.push_button, self.pin_intensity)
-        return CoffeeMachine.set_preference(intensity, f, self.intensity_captor, 5)
+        print("Setting Intensity",intensity,"...")
+        GPIO.output(32, GPIO.HIGH) # relai "selection" -> captor alimentation
+        rotation_count=0
+        #push_button
+        # while we're not detecting any signal, move selector
+        
+        while not self.read_values(self.intensity_captor):
+            rotation_count+=1
+            sleep(0.2)
+            CoffeeMachine.push_button(self.pin_intensity, self.standart_time)
+            sleep(0.1)
+            if rotation_count > 6:
+                # We were not able to get detect captor: We don't know where we are
+                GPIO.output(32,GPIO.LOW)
+                raise ValueError('Volume captor not detected')
+        
+        # We are now on pin 3 (but volume =2 because pin1 isn't any volume.)
+        print("we are on pin3")
+        if intensity<2:
+            rotation_to_make = intensity + 4
+        else:
+            rotation_to_make = intensity - 2
+        print(rotation_to_make)
+        for i in range(rotation_to_make):
+            print("PUSH")
+            # move to intensity selector choosen
+            sleep(0.2)
+            CoffeeMachine.push_button(self.pin_intensity,self.standart_time)
 
+        GPIO.output(32,GPIO.LOW)
+        print("Setting Intensity Done")
+        return True
+        
     def set_volume(self, volume):
-        f = partial(self.rotate_volume_button, "r")
-        return CoffeeMachine.set_preference(volume, f, self.volume_captor, 6)
-
-    def rotate_volume_button(self, direction):
-        if direction.lower() == "r":
+        print("Setting Volume",volume,"...")
+        GPIO.output(32, GPIO.HIGH) # relai "selection" -> captor alimentation
+        rotation_count=0
+        #rotate_button
+        # while we're not detecting any signal, move selector
+        while not self.read_values(self.volume_captor):
+            rotation_count+=1
+            sleep(0.3)
             CoffeeMachine.rotate(self.pin_right_volume, self.pin_left_volume, self.standart_time)
-        elif direction.lower() == "l":
-            CoffeeMachine.rotate(self.pin_left_volume, self.pin_right_volume, self.standart_time)
+            sleep(0.3)
+            if rotation_count > 6:
+                GPIO.output(32,GPIO.LOW)
+                # We were not able to get detect captor: We don't know where we are
+                raise ValueError('Volume captor not detected')
+        # We are now on pin 3
+        if volume==4:
+            rotation_to_make = 3
         else:
-            raise ValueError("direction must be equal to r or l")
+            if volume==3:
+                rotation_to_make = 4
+            else:
+                if volume==2:
+                    rotation_to_make = 0
+                else:
+                    if volume==1:
+                        rotation_to_make = 1
+                    else:
+                        if volume==0:
+                            rotation_to_make = 2
 
-    def intensity_button(self):
-        CoffeeMachine.push_button(self.pin_intensity)
+        for i in range(rotation_to_make):
+            # move to volume selector choosen
+            sleep(0.2)
+            CoffeeMachine.rotate(self.pin_right_volume, self.pin_left_volume, self.standart_time)
 
-    @staticmethod
-    def detection(capteur_lumiere):
-        raise NotImplementedError()
-
-    # f selection is the fonction to change leds position
-    @staticmethod
-    def get_position(f_selection, light_captor, nb_choices):
-        position = -1
-        machine_used = True
-
-        for i in range(nb_choices):
-            if CoffeeMachine.detection(light_captor):
-                machine_used = False
-                position = i
-
-            f_selection()
-
-        if not machine_used:
-            return nb_choices - position - 1
-        else:
-            return -1
-
-    def get_position_volume(self):
-        f = partial(self.rotate_volume_button, "r")
-        return CoffeeMachine.get_position(f, self.volume_captor, 6)
-
-    def get_position_intensity(self):
-        f = partial(self.push_button, self.pin_intensity)
-        return CoffeeMachine.get_position(f, self.intensity_captor, 5)
-
-    def is_cup(self):
-        raise NotImplementedError()
-
-    def is_new_cup(self):
-        return (not self.old_is_cup) and self.new_is_cup
-
-    def tank_is_full(self):
-        return CoffeeMachine.detection(self.pin_water)
-
-    def is_ready(self):
-        return self.tank_is_full()
+        GPIO.output(32, GPIO.LOW)
+        print("Setting Volume Done !")
+        return True
 
     # You should ALWAYS only use one and only one Instance of this class
     def clear_pin(self):
+        print("Cleanup...")
         GPIO.output(self.actuator_pin_list, GPIO.LOW)
         GPIO.cleanup()
+        print("Cleanup Done !")
 
-    def __del__(self):
-        self.__clear_pin()
-
-    def __exit__(self, type, value, traceback):
-        self.__clear_pin()

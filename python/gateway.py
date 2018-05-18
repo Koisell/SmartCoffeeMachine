@@ -17,7 +17,7 @@ def main():
     add_doc(app, PATH_TO_DOC)
 
     port = getenv('PORT', '5000')
-    app.run(host=gethostname(), port=int(port))
+    app.run("0.0.0.0", port=int(port))
 
 
 if __name__ == '__main__':

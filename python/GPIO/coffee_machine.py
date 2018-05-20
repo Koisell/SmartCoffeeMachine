@@ -168,6 +168,23 @@ class CoffeeMachine():
         print("Setting Intensity Done")
         return True
 
+    def determine_rotation(volume):
+        if volume==4:
+            rotation_to_make = 3
+        else:
+            if volume==3:
+                rotation_to_make = 4
+            else:
+                if volume==2:
+                    rotation_to_make = 0
+                else:
+                    if volume==1:
+                        rotation_to_make = 1
+                    else:
+                        if volume==0:
+                            rotation_to_make = 2
+        return rotation_to_make
+
     def set_volume(self, volume):
         print("Setting Volume",volume,"...")
         GPIO.output(32, GPIO.HIGH) # relai "selection" -> captor alimentation
@@ -184,20 +201,7 @@ class CoffeeMachine():
                 # We were not able to get detect captor: We don't know where we are
                 raise ValueError('Volume captor not detected')
         # We are now on pin 3
-        if volume==4:
-            rotation_to_make = 3
-        else:
-            if volume==3:
-                rotation_to_make = 4
-            else:
-                if volume==2:
-                    rotation_to_make = 0
-                else:
-                    if volume==1:
-                        rotation_to_make = 1
-                    else:
-                        if volume==0:
-                            rotation_to_make = 2
+        rotation_to_make = determine_rotation(volume)
 
         for i in range(rotation_to_make):
             # move to volume selector choosen

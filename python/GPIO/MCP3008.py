@@ -61,21 +61,12 @@ class MCP3008():
         # Read the light sensor data
         light_levels = [0 for i in range(6)]
         light_volts = [0 for i in range(6)]
-        #light_level = ReadChannel(light_channel)
-        #light_volts = ConvertVolts(light_level, 2)
         bin = [0 for i in range(6)]
-        # Read the temperature sensor data
-        #temp_level = ReadChannel(temp_channel)
-        #temp_volts = ConvertVolts(temp_level, 2)
-        #temp = ConvertTemp(temp_level, 2)
         for i, nb in enumerate(channels):
             light_levels[i] = ReadChannel(nb)
             light_volts[i] = ConvertVolts(light_levels[i],2)
             if light_volts[i] > 2:
                 bin[i] = 1
-    # Print out results
-    #    print("Light: ({}V)".format(light_volts))
-    #    print("Temp : ({}V)".format(temp_volts))
         print(*bin)
         # Wait before repeating loop
         time.sleep(delay)

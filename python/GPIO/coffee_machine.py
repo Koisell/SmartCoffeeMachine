@@ -84,7 +84,7 @@ class CoffeeMachine():
             print("But there was a problem reading intensity captor (default Volume was used)")
         return True
 
-    def ReadChannel(channel):
+    def read_channel(channel):
         spi = spidev.SpiDev()
         spi.open(0, 0)
         adc = spi.xfer2([1, (8 + channel) << 4, 0])
@@ -92,12 +92,12 @@ class CoffeeMachine():
         spi.close()
         return data
 
-    def ConvertVolts(data, places):
+    def convert_volts(data, places):
         volts = (data * 3.3) / float(1023)
         volts = round(volts, places)
         return volts
 
-    def ConvertTemp(data, places):
+    def convert_temp(data, places):
 
         # ADC Value
         # (approx)  Temp  Volts
@@ -124,8 +124,8 @@ class CoffeeMachine():
         bin = [0 for i in range(8)]
 
         for i, nb in enumerate(channels):
-            light_levels[i] = CoffeeMachine.ReadChannel(nb)
-            light_volts[i] = CoffeeMachine.ConvertVolts(light_levels[i],2)
+            light_levels[i] = CoffeeMachine.read_channel(nb)
+            light_volts[i] = CoffeeMachine.convert_volts(light_levels[i],2)
             if light_volts[i] > 2:
                 bin[i] = 1
         print("\tValues from Captors :",*bin)

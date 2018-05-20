@@ -8,12 +8,10 @@ from functools import partial
 import spidev
 
 class CoffeeMachine():
-    
 
     # we should make a conf file to setup pin...
     def __init__(self):
         GPIO.setmode(GPIO.BOARD)
-        #GPIO.setmode(GPIO.BCM)
         GPIO.setup(32, GPIO.OUT, initial=GPIO.LOW)
         self.standart_time = 0.1
 
@@ -26,23 +24,14 @@ class CoffeeMachine():
 
         # Push button intensity
         self.pin_intensity = 11
-        
+
         self.pin_volume_captor = 18 #?
 
         self.actuator_pin_list = [self.pin_volume_captor, self.pin_single_coffee_button, self.pin_right_volume, self.pin_left_volume, self.pin_intensity]
 
-        #self.pin_intensity_captor = 17 #?
-        #self.pin_volume_captor = 18 #?
-        #self.pin_water = 5 #?
         self.volume_captor = 1  # to do: implement class
         self.intensity_captor = 6
 
-        #self.pin_sonar1 = 13
-        #self.pin_sonar2 = 14
-        #self.captor_pin_list = [self.pin_intensity_captor, self.pin_volume_captor, self.pin_water] #?
-
-        #self.old_is_cup = self.is_cup()
-        #self.new_is_cup = self.is_cup()
 
         GPIO.setup(self.actuator_pin_list, GPIO.OUT, initial=GPIO.LOW)
         #GPIO.setup(self.captor_pin_list, GPIO.IN)
@@ -67,9 +56,6 @@ class CoffeeMachine():
         print("Making Coffee...")
         print("Volume Wanted    :",volume)
         print("Intensity Wanted :",intensity)
-        # Waiting to refull water tank
-        #while not self.is_ready():
-            #sleep(1)
 
         problem_intensity=False
         problem_volume=False
@@ -90,7 +76,7 @@ class CoffeeMachine():
             CoffeeMachine.push_button(self.pin_single_coffee_button, self.standart_time)
         except Exception as e:
             print(str(e))
-            
+
         print("Making Coffee Done !")
         if problem_intensity:
             print("But there was a problem reading intensity captor (default Intensity was used)")
@@ -134,13 +120,9 @@ class CoffeeMachine():
         # Read the light sensor data
         light_levels = [0 for i in range(8)]
         light_volts = [0 for i in range(8)]
-        #light_level = ReadChannel(light_channel)
-        #light_volts = ConvertVolts(light_level, 2)
+
         bin = [0 for i in range(8)]
-        # Read the temperature sensor data
-        #temp_level = ReadChannel(temp_channel)
-        #temp_volts = ConvertVolts(temp_level, 2)
-        #temp = ConvertTemp(temp_level, 2)
+
         for i, nb in enumerate(channels):
             light_levels[i] = CoffeeMachine.ReadChannel(nb)
             light_volts[i] = CoffeeMachine.ConvertVolts(light_levels[i],2)
@@ -148,17 +130,17 @@ class CoffeeMachine():
                 bin[i] = 1
         print("\tValues from Captors :",*bin)
         print("I RETRUN :",bin[pin_to_read-1])
+
+        # Return boolean value of captor that we are looking at.
         return bin[pin_to_read-1]
-        print("\tReading Values Done",pin_to_read)
-        return True
 
     def set_intensity(self, intensity):
         print("Setting Intensity",intensity,"...")
         GPIO.output(32, GPIO.HIGH) # relai "selection" -> captor alimentation
         rotation_count=0
-        #push_button
+
+        # push_button
         # while we're not detecting any signal, move selector
-        
         while not self.read_values(self.intensity_captor):
             rotation_count+=1
             sleep(0.2)
@@ -168,7 +150,7 @@ class CoffeeMachine():
                 # We were not able to get detect captor: We don't know where we are
                 GPIO.output(32,GPIO.LOW)
                 raise ValueError('Volume captor not detected')
-        
+
         # We are now on pin 3 (but volume =2 because pin1 isn't any volume.)
         print("we are on pin3")
         if intensity<2:
@@ -185,7 +167,7 @@ class CoffeeMachine():
         GPIO.output(32,GPIO.LOW)
         print("Setting Intensity Done")
         return True
-        
+
     def set_volume(self, volume):
         print("Setting Volume",volume,"...")
         GPIO.output(32, GPIO.HIGH) # relai "selection" -> captor alimentation
@@ -232,4 +214,3 @@ class CoffeeMachine():
         GPIO.output(self.actuator_pin_list, GPIO.LOW)
         GPIO.cleanup()
         print("Cleanup Done !")
-
